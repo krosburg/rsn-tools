@@ -34,6 +34,8 @@ SERVER = 'dev03'
 t_start = '2017-08-02T00:00:00.000Z'
 t_end = '2018-07-17T00:00:00.000Z'
 
-# VARIABLES
+# Instantiate Instrument Object
 inst = InstDataObj('CE04OSPS-PC01B-4D-PCO2WA105')
+
+# Run Data Check & Plot
 inst.go(t_start, t_end, 'dev03')
