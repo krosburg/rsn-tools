@@ -153,6 +153,55 @@ rdList = {
       "testPD": "PD908",
       "pdName": "seawater_temperature"
    },
+   "RS01SLBS-LJ01A-12-DOSTAD101": {
+      "method": "streamed",
+      "stream": "do_stable_sample",
+      "fullrd": "RS01SLBS/LJ01A/12-DOSTAD101",
+      "testPD": "PD14",
+      "pdName": "dissolved_oxygen"
+   },
+   "RS01SBPS-PC01A-4A-DOSTAD103": {
+      "method": "streamed",
+      "stream": "do_stable_sample",
+      "fullrd": "RS01SBPS/PC01A/4A-DOSTAD103",
+      "testPD": "PD14",
+      "pdName": "dissolved_oxygen"
+   },
+   "CE02SHBP-LJ01D-06-DOSTAD106": {
+      "method": "streamed",
+      "stream": "do_stable_sample",
+      "fullrd": "CE02SHBP/LJ01D/06-DOSTAD106",
+      "testPD": "PD14",
+      "pdName": "dissolved_oxygen"
+   },
+   "CE04OSBP-LJ01C-06-DOSTAD108": {
+      "method": "streamed",
+      "stream": "do_stable_sample",
+      "fullrd": "CE04OSBP/LJ01C/06-DOSTAD108",
+      "testPD": "PD14",
+      "pdName": "dissolved_oxygen"
+   },
+   "CE04OSPS-PC01B-4A-DOSTAD109": {
+      "method": "streamed",
+      "stream": "do_stable_sample",
+      "fullrd": "CE04OSPS/PC01B/4A-DOSTAD109",
+      "testPD": "PD14",
+      "pdName": "dissolved_oxygen"
+   },
+   "RS03AXBS-LJ03A-12-DOSTAD301": {
+      "method": "streamed",
+      "stream": "do_stable_sample",
+      "fullrd": "RS03AXBS/LJ03A/12-DOSTAD301",
+      "testPD": "PD14",
+      "pdName": "dissolved_oxygen"
+   },
+   "RS03AXPS-PC03A-4A-DOSTAD303": {
+      "method": "streamed",
+      "stream": "do_stable_sample",
+      "fullrd": "RS03AXPS/PC03A/4A-DOSTAD303",
+      "testPD": "PD14",
+      "pdName": "dissolved_oxygen"
+   },
    "RS01SBPS-PC01A-4C-FLORDD103": {
       "method": "streamed",
       "stream": "flort_d_data_record",
