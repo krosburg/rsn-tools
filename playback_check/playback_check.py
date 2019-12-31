@@ -107,21 +107,22 @@ class InstDataObj(object):
         try:
             raw_data = requests.get(self.URL, auth=(username, token),
                                     timeout=20, verify=False)
-            print(' Done')
             # Exit if bad status code
             if raw_data.status_code == 404:
                 print(' FAIL')
-                print('ERROR: No data found between given start and end dates.')
+                print('ERROR: No data found between given start and end dates.\n')
                 return False
             elif raw_data.status_code != SUCCESS_CODE:
                 print(' FAIL')
                 print('Error: status code ', raw_data.status_code)
-                print('Error: response.json(): ', raw_data.json())
+                print('Error: response.json(): \n', raw_data.json())
                 return False
+            else:
+                print(' Done')
                 
         except Exception as err:
             print(' FAIL')
-            print('Exception: %s' % str(err))
+            print('Exception: %s\n' % str(err))
             return False
             
         # Process Data into t and x NP Arrays
@@ -141,7 +142,7 @@ class InstDataObj(object):
             self.t = mdates.date2num(self.t)
             self.x = np.array(self.x, dtype=np.float)
             self.y = np.array(self.y, dtype=np.float)
-        print(' Done')
+        print(' Done\n')
         return True
         
     
