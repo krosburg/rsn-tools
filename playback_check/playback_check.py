@@ -106,7 +106,7 @@ class InstDataObj(object):
         print('Requesting ' + self.pnames[0] + ' data from M2M...', end='')
         try:
             raw_data = requests.get(self.URL, auth=(username, token),
-                                    timeout=10, verify=False)
+                                    timeout=20, verify=False)
             print(' Done')
             # Exit if bad status code
             if raw_data.status_code == 404:
