@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 1.2.2
+* Fixed \t sneaky character in `pdName` field for BOTPTs in `streams.py`.
+
 ## Version 1.2.1
 * Changed x-axis limits to use the user-specified start/end times instead of the min/max of returned data to better show data return versus time bracket.
 

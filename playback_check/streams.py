@@ -53,28 +53,28 @@ rdList = {
       "stream": "botpt_lily_sample",
       "fullrd": "RS03CCAL/MJ03F/05-BOTPTA301",
       "testPD": "PD839",
-      "pdName": "	lily_x_tilt"
+      "pdName": "lily_x_tilt"
    },
    "RS03ECAL-MJ03E-06-BOTPTA302": {
       "method": "streamed",
       "stream": "botpt_lily_sample",
       "fullrd": "RS03ECAL/MJ03E/06-BOTPTA302",
       "testPD": "PD839",
-      "pdName": "	lily_x_tilt"
+      "pdName": "lily_x_tilt"
    },
    "RS03INT2-MJ03D-06-BOTPTA303": {
       "method": "streamed",
       "stream": "botpt_lily_sample",
       "fullrd": "RS03INT2/MJ03D/06-BOTPTA303",
       "testPD": "PD839",
-      "pdName": "	lily_x_tilt"
+      "pdName": "lily_x_tilt"
    },
    "RS03ASHS-MJ03B-09-BOTPTA304": {
       "method": "streamed",
       "stream": "botpt_lily_sample",
       "fullrd": "RS03ASHS/MJ03B/09-BOTPTA304",
       "testPD": "PD839",
-      "pdName": "	lily_x_tilt"
+      "pdName": "lily_x_tilt"
    },
    "CE02SHBP-LJ01D-06-CTDBPN106": {
       "method": "streamed",
