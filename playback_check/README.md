@@ -38,5 +38,4 @@ Putting it all together, a basic data check would look like:
     
     # Instiantiate and do check
     inst = InstDataObj('CE04OSPS-PC01B-4D-PCO2WA105')
-    inst.go(t_start, t_end, 'dev03')
-```
+    inst.go(t_start, t_end, srv=server, fsize=(9,3), DEBUG=False)
