@@ -146,6 +146,18 @@ class InstDataObj(object):
         return True
         
     
+    def quickPlot(self, beginDT, endDT, fsize=(15, 4)):
+        fig = plt.figure(figsize=fsize)
+        plt.plot(self.t, self.x, '-o')
+        ax1 = plt.gca()
+        #plt.xlim([np.nanmin(self.t), np.nanmax(self.t)])
+        plt.xlim([datetime.strptime(beginDT, '%Y-%m-%dT%H:%M:%S.%fZ'),
+                  datetime.strptime(endDT, '%Y-%m-%dT%H:%M:%S.%fZ')])
+        ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M\n%m/%d/%y'))
+        plt.title(self.ref_des + ' ' + self.pnames[0])
+        plt.grid()
+    
+    
     def go(self, beginDT, endDT, srv, fsize=(15, 4), DEBUG=False):
         """ Builds URL, get data, then plots.
             Takes in ISO format begin and end times, server name
@@ -155,12 +167,4 @@ class InstDataObj(object):
         self.build_url(beginDT, endDT, srv, DEBUG)
         if self.get_data(srv): 
             # Plot
-            fig = plt.figure(figsize=fsize)
-            plt.plot(self.t, self.x, '-o')
-            ax1 = plt.gca()
-            #plt.xlim([np.nanmin(self.t), np.nanmax(self.t)])
-            plt.xlim([datetime.strptime(beginDT, '%Y-%m-%dT%H:%M:%S.%fZ'),
-                      datetime.strptime(endDT, '%Y-%m-%dT%H:%M:%S.%fZ')])
-            ax1.xaxis.set_major_formatter(mdates.DateFormatter('%H:%M\n%m/%d/%y'))
-            plt.title(self.ref_des + ' ' + self.pnames[0])
-            plt.grid()
+            self.quickPlot(beginDT, endDT, fsize=fsize)

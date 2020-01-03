@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 1.3.0
+* Added `self.quickPlot()` function to `playback_check.py` to quickly plot data if you're not using `self.go()`.
+
 ## Version 1.2.2
 * Fixed \t sneaky character in `pdName` field for BOTPTs in `streams.py`.
 
