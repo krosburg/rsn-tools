@@ -28,7 +28,9 @@ Credentials file:
 IMPORTANT NOTE: MUST BE RUN FROM BASE DIRECTORY!
 """
 
-from .engine import InstDataObj
+#foobar = __import__("core.engine")
+from core.engine import InstDataObj
+#from foobar import InstDataObj
 
 # USER VARIABLES
 SERVER = 'prod'

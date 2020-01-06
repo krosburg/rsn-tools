@@ -6,8 +6,8 @@ Created on Thu Sep 26 14:12:23 2019
 """
 
 from datetime import datetime, timedelta
-from .playback_check.streams import rdList
-from playback_check.ooicreds import PROD_CREDENTIALS, DEV01_CREDENTIALS, DEV03_CREDENTIALS
+from core.streams import rdList
+from core.ooicreds import PROD_CREDENTIALS, DEV01_CREDENTIALS, DEV03_CREDENTIALS
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np

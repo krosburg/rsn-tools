@@ -5,8 +5,7 @@ Created on Fri Jan  3 12:08:51 2020
 @author: Kellen
 """
 # == IMPORTS ================================================================ #
-#from playback_check import InstDataObj
-from playback_check.engine import InstDataObj
+from core.engine import InstDataObj
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
