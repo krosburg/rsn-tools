@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 2.0.0
+* Modified `playback_check` to be a callable package. Redefined all imports to use package structure. Renamed `playback_check.py` to `engine.py`.
+
 ## Version 1.3.0
 * Added `self.quickPlot()` function to `playback_check.py` to quickly plot data if you're not using `self.go()`.
 
