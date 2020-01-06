@@ -31,26 +31,23 @@ from playback_check import InstDataObj
 
 # USER VARIABLES
 SERVER = 'prod'
-t_start = '2018-08-02T00:00:00.000Z'
-t_end = '2019-07-17T00:00:00.000Z'
+#SERVER = 'dev03'
+t_start = '2014-08-02T00:00:00.000Z'
+t_end = '2018-07-17T23:59:59.999Z'
 
-#rd_prefix = 'CE02SHBP-LJ01D-'
-#instList = ['05-ADCPTB104', '06-CTDBPN106', '06-DOSTAD106',
-#            '07-VEL3DC108', '08-OPTAAD106', '09-PCO2WB103',
-#            '10-PHSEND103', '11-HYDBBA106']
+# =============================================================================
+# inst = InstDataObj('RS01SBPS-SF01A-3B-OPTAAD101')
+# inst.go(t_start, t_end, SERVER)
+# =============================================================================
 
-instList = ['CE02SHBP-LJ01D-06-DOSTAD106',
-            'CE04OSBP-LJ01C-06-DOSTAD108',
-            'CE04OSPS-PC01B-4A-DOSTAD109',
-            'RS01SBPS-PC01A-4A-DOSTAD103',
-            'RS01SLBS-LJ01A-12-DOSTAD101',
-            'RS03AXBS-LJ03A-12-DOSTAD301',
-            'RS03AXPS-PC03A-4A-DOSTAD303']
-
-for i in instList:
+# Set Reference Designator List
+rds = ['CE04OSPS-PC01B-4D-PCO2WA105']
+  
+for rd in rds:
     # Instantiate Instrument Object
-    #inst = InstDataObj(rd_prefix + i)
-    inst = InstDataObj(i)
-    
+    inst = InstDataObj(rd)
+      
     # Run Data Check & Plot
     inst.go(t_start, t_end, SERVER)
+ 
+# =============================================================================
