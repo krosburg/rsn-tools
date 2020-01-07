@@ -1,9 +1,12 @@
 # Release Notes
 
-## Version 1.3.0
+## Version 1.2.0
+* #217 - Created a tool to generate bulk scripts for `gap_cli.py` use.
+
+## Version 1.1.3
 * #216 - Handle edge case where `gap_cli.py` cannot handle an empty data return.
 
-## Version 1.2.0
+## Version 1.1.2
 * #215 - Stopped `gap_cli.py` from creating gap logs if no gap exists.
 
 ## Version 1.1.1
