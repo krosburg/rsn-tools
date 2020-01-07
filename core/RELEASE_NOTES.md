@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 2.1.0
+* Added a ref-des search by instrument name as `core.engine.RDsearchByInst()`.
+
 ## Version 2.0.0
 * Modified `playback_check` to be a callable package. Redefined all imports to use package structure. Renamed `playback_check.py` to `engine.py`.
 

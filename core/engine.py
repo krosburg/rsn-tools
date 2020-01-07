@@ -56,6 +56,10 @@ def epoch_to_dt(t):
     return t_datetime
 
 
+def RDsearchByInst(inst):
+    return next( (key for key in rdList if key.endswith(inst)), None)
+
+
 class InstDataObj(object):
     """ Main data object """
     def __init__(self, refdes):
