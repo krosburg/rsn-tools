@@ -5,7 +5,6 @@
 
 ## Version 2.0.1
 * Removed debugging code and improved log messages.
->>>>>>> 44bb25633a20d3c46da38dc42656376beb98017b
 
 ## Version 2.0.0
 * Modified `playback_check` to be a callable package. Redefined all imports to use package structure. Renamed `playback_check.py` to `engine.py`.
