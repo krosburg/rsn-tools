@@ -115,9 +115,29 @@ if inst.get_data(SERVER):
         # Close FIle
         print('Closing log file...', end='')
         f.close()
-        print(" Done!\n")
+        print(" Done!")
     
     else:
         print("No gaps: no log file created.")
 
+# No data returned
+else:
+    print("Writing to log: " + log_path + log_file + "...", end="")
+    try:
+        f = open(log_path + log_file, 'w+')
+    except:
+        print(' FAIL!')
+        raise Exception('ERROR: Could not open/write file!')
+    f.write("No data returned from M2M. This could mean the time range\n")
+    f.write("contains no data, the request timed out, or another error\n")
+    f.write("occured.")
+    print(' Done!')
+    
+    # Close FIle
+    print('Closing log file...', end='')
+    f.close()
+    print(" Done!")
+
+# Final line skip
+print('')
 
