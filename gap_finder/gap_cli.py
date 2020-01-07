@@ -63,14 +63,7 @@ else:
         log_path = sys.argv[4]
         if not log_path.endswith('/'):
             log_path += '/'
-        print("Opening log file...", end="")
         log_file = rd + '_' + sys.argv[2] + '.log'
-        try:
-            f = open(log_path + log_file, 'w+')
-            print(" Done!")
-        except:
-            print(" FAIL!")
-            raise Exception('ERROR: Could not open/write file!')
     else:
         useErr()
 
@@ -98,22 +91,33 @@ if inst.get_data(SERVER):
     tbad = inst.t[tgrad >= cutoff_frac]
     tgradbad = tgrad[tgrad >= cutoff_frac]
     
-    # Handle Delayed Start and Early End Plotting & Logging
-    if bad_start:
-        f.write("%s to %s (start gap)\n" % (tPrint(dt_start), tPrint(t_i)))
-    if bad_end:
-        f.write("%s to %s (end gap)\n" % (tPrint(t_f), tPrint(dt_end)))
-        
-    # Handle Mid-Secion Gaps
-    if len(tbad) > 0:
+    # Open file if gaps
+    if bad_start or bad_end or len(tbad) > 0:
         print("Writing to log: " + log_path + log_file + "...", end="")
-        for j in range(len(tbad)-1):
-            f.write("%s to %s (middle gap)\n" % (tPrint(tbad[j]), tPrint(tbad[j+1])))
+        try:
+            f = open(log_path + log_file, 'w+')
+        except:
+            print(' FAIL!')
+            raise Exception('ERROR: Could not open/write file!')
+    
+        # Handle Delayed Start and Early End Plotting & Logging
+        if bad_start:
+            f.write("%s to %s (start gap)\n" % (tPrint(dt_start), tPrint(t_i)))
+        if bad_end:
+            f.write("%s to %s (end gap)\n" % (tPrint(t_f), tPrint(dt_end)))
+            
+        # Handle Mid-Secion Gaps
+        if len(tbad) > 0:
+            for j in range(len(tbad)-1):
+                f.write("%s to %s (middle gap)\n" % (tPrint(tbad[j]), tPrint(tbad[j+1])))
         print(" Done!")
+        
+        # Close FIle
+        print('Closing log file...', end='')
+        f.close()
+        print(" Done!\n")
+    
     else:
-        print("No gaps: blank log file created.")
+        print("No gaps: no log file created.")
 
-# Close FIle
-print('Closing log file...', end='')
-f.close()
-print(" Done!\n")
+
