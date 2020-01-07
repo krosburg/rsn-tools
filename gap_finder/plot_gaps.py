@@ -5,12 +5,14 @@ Created on Fri Jan  3 12:08:51 2020
 @author: Kellen
 """
 # == IMPORTS ================================================================ #
+import sys
+sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from core.engine import InstDataObj
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
-import sys
+
 
 
 # == FUNCTION DEFINITIONS =================================================== #
@@ -48,32 +50,6 @@ cutoff_frac = cutoff_hours/24.0
 dt_cuttoff = timedelta(hours=cutoff_hours)
 t_fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
 t_suffix = '-01T00:00:00.000Z'
-
-
-# Process CLI Arguments
-if len(sys.argv) >= 1:
-    try:
-        nargs = len(sys.argv) - 1
-        rd = sys.argv[1]
-        if nargs > 1 and nargs < 3:
-            raise Exception
-        elif nargs >= 3:
-            if sys.argv[2].isnumeric():
-                tmp1 = sys.argv[2]
-            if sys.argv[3].isnumeric():
-                tmp2 = sys.argv[3]
-            times = [tmp1, tmp2]
-        if nargs > 3:
-            if sys.argv[4] == '0':
-                LOGFILE = []
-            else:
-                LOGFILE = sys.argv[4]
-    except:
-        print("ERROR! Usage: python <prgm-name> <ref-des> <start month-date> <end month-date> [log file|0]")
-        print("              (e.g: python test_gapping.py CE04OSPS-PC01B-4D-PCO2WA105 2018-07 2018-08 ./log.txt)")
-        
-        
-
 
 
 # Loop Through All Times
