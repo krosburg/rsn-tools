@@ -50,25 +50,27 @@ else:
         raise Exception('ERROR: Invalid refdes')
     else:
         rd = sys.argv[1]
-        print(rd)
     
     # Get Start and End dates
     if sys.argv[2][0:4].isnumeric() and sys.argv[3][0:4].isnumeric():
-        print("here")
         t_start = sys.argv[2] + t_suffix
-        print(t_start)
         t_end = sys.argv[3] + t_suffix
-        print(t_end)
     else:
         useErr()
         
     # Get Logfile
     if not sys.argv[4].isnumeric():
         log_path = sys.argv[4]
-        print(log_path)
         if not log_path.endswith('/'):
             log_path += '/'
-        f = open(log_path + rd + '_' + sys.argv[2] + '.log', 'w+')
+        print("Opening log file...", end="")
+        log_file = rd + '_' + sys.argv[2] + '.log'
+        try:
+            f = open(log_path + log_file, 'w+')
+            print(" Done!")
+        except:
+            print(" FAIL!")
+            raise Exception('ERROR: Could not open/write file!')
     else:
         useErr()
 
@@ -104,8 +106,14 @@ if inst.get_data(SERVER):
         
     # Handle Mid-Secion Gaps
     if len(tbad) > 0:
+        print("Writing to log: " + log_path + log_file + "...", end="")
         for j in range(len(tbad)-1):
-            f.write("%s to %s\n (middle gap)" % (tPrint(tbad[j]), tPrint(tbad[j+1])))
-        
+            f.write("%s to %s (middle gap)\n" % (tPrint(tbad[j]), tPrint(tbad[j+1])))
+        print(" Done!")
+    else:
+        print("No gaps: blank log file created.")
+
+# Close FIle
+print('Closing log file...', end='')
 f.close()
-       
+print(" Done!\n")
