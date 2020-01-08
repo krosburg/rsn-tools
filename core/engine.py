@@ -111,6 +111,19 @@ class InstDataObj(object):
             print(self.URL)
             
             
+    def get_metadata_times(self, srv, stream=None):
+        if not stream:
+            stream = self.stream
+        url = '/'.join([getBaseURL(srv), self.fullrd, 'metadata', 'times'])
+        metadata = requests.get(url, auth=getCreds(srv),
+                                timeout=20, verify=False)
+        if metadata.status_code != 200:
+            print(' FAIL')
+            print('ERROR: Request failed with: %i\n' % metadata.status_code)
+            return []
+        return [x for x in metadata.json() if x['stream'] == stream][0]
+            
+            
     def get_data(self, srv):
         """ Given a request URL, returns a json element with the data from M2M """
         username, token = getCreds(srv)

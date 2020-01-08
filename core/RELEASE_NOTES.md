@@ -1,5 +1,8 @@
 # Release Notes
 
+# Version 2.3.0
+* #219 - Added `core.engine.get_metadata_times()` function for requesting start/end times for a stream.
+
 ## Version 2.2.0
 * Added `self.stream` to `core.engine.InstDataObj`.
 * Added `self.fullrd` to `core.engine.InstDataObj`.
