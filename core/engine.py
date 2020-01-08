@@ -73,6 +73,7 @@ class InstDataObj(object):
         self.pdnums = rdList[refdes]['testPD']
         self.pnames = [rdList[refdes]['pdName']]
         self.method = 'streamed'
+        self.stream = rdList[refdes]['stream']
         self.url_part = self.site + '/' + self.node + '/' + self.inst_full \
                      + '/streamed/' + rdList[refdes]['stream']
         self.URL = ""
