@@ -1,38 +1,28 @@
-# Core
+# Gap Finder
 ## Summary
-This module is used to check the availabilty of data on a specified OOINet server during a specified time/date interval using the M2M interface.
+A collection of scripts used to help identify data gaps. These scripts rely on the `rsn-tools.core` package.
 
-The code will plot data found in the interval or return an error if a 404 error (no data) is returned.
+## gap_cli.py
+### Description
+`gap_cli.py` is a command line tool used to check for data gaps for a single given reference designator (RD) and single given time range identified by a start and end year-month combination (i.e. yyyy-mm; see Usage below). The tool writes to a log file in the given log directory.
 
-## Requried Files
-### streams.py
-This file contains a list of all refernce designators for valid insturments and includes their science stream information as well as a chosen test parameter to be used for data checks. Update this as new instruments come online or when preload is modified for an existing instrument.
+The tool will detect any datagaps larger than `cutoff_hours` (default 24 hr). This can be modified within the code if you dare. It will also detect beginning end gaps, i.e. gaps that begin/end outside of the user specified time range. If those gaps are due to the user specified time range being outside of the M2M data start or data end times for that instrument, the gap will be ignored as a false gap (because it is). If the start time of a user specified time range starts before the M2M data start time for an instrument, the user start time will be changed to the metadata start time to avoid a false gap. The same is true for end times. Note that this has the potential to miss real data gaps in a situation where an instrument was producing data prior to the M2M metadata beginTime, but for which data had not yet been playedback.
 
-### engine.py
-This is the heavy lifter, containing all of the functions and classes required to do an easy playback check or data request. Dont mess with this file.
+The tool is intended to be run by a cronjob on a monthly basis to monitor and update a repository of data gaps. Because of this the 24 hour cutoff only works well if the spacing between data points is less than 24 hours. It is recommended to only use 1-month long user specified data ranges. A bulk tool is in the works for checking a large amount of data. This tool will generate a shell script with many gap_cli commands to be run sequentially.
 
-### ooicreds.py
-This file contains your user credentials for the various OOINet/M2M servers that allow `rsn-tools.engine` to do its job. This file is ommited from Github by `.gitignore` as a saftey protocol so credentials aren't made public.
+### Usage
+Basic useage: `python gap_cli.py <reference-designator> <start> <end> <log-file-directory>`
 
-You can copy the pre-existing `ooicreds_template.py` and modifiy it on your local copy to include your credentials so the software will work.
+Detailed usage: needs to be written
 
-## Basic use for data availability checking
-1. Import the `InstDataObj` class from the `engine` module
-1. Set the `SERVER` variable to `'prod'`, `'dev01'`, or `'dev03'` based on the server you would like to check
-1. Set the `t_start` and `t_end` variables to an ISO 8601 time format. (e.g. `t_end = '2019-12-30T14:51:32.000Z'`)
-1. Use a reference designator to instantiate an instrument object (e.g. `inst = InstDataObj('CE04OSPS-PC01B-4D-PCO2WA105'`)
-1. Call the `go(start, end, server)` function to run and plot a data check (e.g. `inst.go(t_start, t_end, 'dev03')`)
+### Installation
+1. Create a Python 3.6+ Conda or Pip environment with numpy, requests, pandas, urllib3, datetime, matplotlib, sys, and os (some of these may be included by default)
+1. Clone the git repository into a directory of your choosing
+1. Find all python files that contain a `sys.path.append` line in the imports section and change the file path to `/your/install/dir/rsn-tools/`
+1. Activate your environment
+1. You should be able to run the code now.
 
-Putting it all together, a basic data check would look like:
-```python
-    from core.engine import InstDataObj
-    
-    # Variables
-    refdes  = 'CE04OSPS-PC01B-4D-PCO2WA105'
-    server  = 'prod'
-    t_start = '2017-08-02T00:00:00.000Z'
-    t_end   = '2018-07-17T00:00:00.000Z'
-    
-    # Instiantiate and do check
-    inst = InstDataObj('CE04OSPS-PC01B-4D-PCO2WA105')
-    inst.go(t_start, t_end, srv=server, fsize=(9,3), DEBUG=False)
+
+## plot_gaps.py
+### Description
+Description is needed.
