@@ -29,16 +29,24 @@ def getCreds(srv):
     else:
         raise Exception("Credentials not configured for " + srv + ". Abort!")
         
-def getBaseURL(srv):
-    """ Get base URL based on server specification """
+def getBaseURL(srv, use_endpoint=True):
+    """ Get base URL based on server specification. IF use_endpoint is True or
+        not specified the sensor inventory endpoint will be added to the URL.
+        If use_endpoint is False, just the main domain URL will be used."""
+    ENDPOINT = 'api/m2m/12576/sensor/inv/'
+    # Define main domain URL based on server designation (or quit w/ error)
     if srv is "prod":
-        return 'https://ooinet.oceanobservatories.org/'
+        url = 'https://ooinet.oceanobservatories.org/'
     elif srv is "dev01" or srv is "pre-prod":
-        return 'https://ooinet-dev-01.oceanobservatories.org/'
+        url = 'https://ooinet-dev-01.oceanobservatories.org/'
     elif srv is "dev03" or srv is "test":
-        return 'https://ooinet-dev-03.oceanobservatories.org/'
+        url = 'https://ooinet-dev-03.oceanobservatories.org/'
     else:
         raise Exception("BASE_URL not configured for " + srv + ". Abort!")
+    # Add enpoint if requested
+    if use_endpoint:
+        return url + ENDPOINT
+    return url
 
 
 def epoch_to_dt(t):
@@ -69,13 +77,13 @@ class InstDataObj(object):
         self.port = refdes.split('-')[2]
         self.inst = refdes.split('-')[3]
         self.inst_full = self.port + '-' + self.inst
+        self.fullrd = rdList[refdes]['fullrd']
         self.ref_des = refdes
         self.pdnums = rdList[refdes]['testPD']
         self.pnames = [rdList[refdes]['pdName']]
         self.method = 'streamed'
         self.stream = rdList[refdes]['stream']
-        self.url_part = self.site + '/' + self.node + '/' + self.inst_full \
-                     + '/streamed/' + rdList[refdes]['stream']
+        self.url_part = '/'.join([self.fullrd, 'streamed', self.stream])
         self.URL = ""
         self.t = []
         self.x = []
@@ -85,10 +93,9 @@ class InstDataObj(object):
 
     def build_url(self, beginDT, endDT, srv, DEBUG=False):
         print('Building URL...', end='')
-        ENDPOINT = 'api/m2m/12576/sensor/inv/'
-        BASEURL = getBaseURL(srv)
+        BASEURL = getBaseURL(srv, use_endpoint=True)
         LIMIT = 1000
-        self.URL = BASEURL + ENDPOINT + self.url_part \
+        self.URL = BASEURL + self.url_part \
             + '?limit=' + str(LIMIT) \
             + '&beginDT=' + beginDT \
             + '&endDT=' + endDT \
@@ -102,8 +109,8 @@ class InstDataObj(object):
         print('   End:      ' + endDT)
         if DEBUG:
             print(self.URL)
-    
-
+            
+            
     def get_data(self, srv):
         """ Given a request URL, returns a json element with the data from M2M """
         username, token = getCreds(srv)

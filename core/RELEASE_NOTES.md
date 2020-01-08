@@ -2,6 +2,9 @@
 
 ## Version 2.2.0
 * Added `self.stream` to `core.engine.InstDataObj`.
+* Added `self.fullrd` to `core.engine.InstDataObj`.
+* Cleaned up `InstdataObj` init code.
+* Added endpoint inclusion to `core.engine.getBaseURL()`
 
 ## Version 2.1.0
 * Added a ref-des search by instrument name as `core.engine.RDsearchByInst()`.
