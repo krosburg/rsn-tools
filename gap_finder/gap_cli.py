@@ -69,15 +69,27 @@ else:
 
 # Instantiate Instrument Object
 inst = InstDataObj(rd)
+inst.build_url(t_start, t_end, SERVER, DEBUG=False)
+
+# Get Metadata/Times Bounds & Check 
+metadata = inst.get_metadata_times(SERVER)
   
 # Run Data Check & Plot if data come back
-inst.build_url(t_start, t_end, SERVER, DEBUG=False)
-if inst.get_data(SERVER):
+if t_end < metadata['beginTime'] or t_start > metadata['endTime']:
+    print('Given time range is outside data bounds - SKIPPING!')
+elif inst.get_data(SERVER):
     # Convert Time Data to Datetime Format
     t_i = tConv(inst.t[0])
     t_f = tConv(inst.t[-1])
-    dt_start = datetime.strptime(t_start, t_fmt)
-    dt_end = datetime.strptime(t_end, t_fmt)
+    if t_start < metadata['beginTime']:
+        dt_start = datetime.strptime(metadata['beginTime'], t_fmt)
+    else:
+        dt_start = datetime.strptime(t_start, t_fmt)
+    if t_end > metadata['endTime']:
+        dt_end = datetime.strptime(metadata['endTime'], t_fmt)
+    else:
+        dt_end = datetime.strptime(t_end, t_fmt)
+
     
     # Bulk Start/End Checks
     bad_start, bad_end = False, False
