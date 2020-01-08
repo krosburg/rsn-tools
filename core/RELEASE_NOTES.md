@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 2.2.0
+* Added `self.stream` to `core.engine.InstDataObj`.
+
 ## Version 2.1.0
 * Added a ref-des search by instrument name as `core.engine.RDsearchByInst()`.
 
