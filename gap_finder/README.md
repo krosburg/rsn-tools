@@ -13,7 +13,13 @@ The tool is intended to be run by a cronjob on a monthly basis to monitor and up
 ### Usage
 Basic useage: `python gap_cli.py <reference-designator> <start> <end> <log-file-directory>`
 
-Detailed usage: needs to be written
+Examples:
+```
+[test@server]: cd /path/to/rsn-tools/gap_finder/
+[test@server]: python gap_cly.py CE04OSPS-PC01B-4D-PCO2WA105 2018-05 2018-06 /home/me/logs/
+```
+
+The trailing slash on the log path is optional. Note: don't give a log file name, just give a log directory. The file name will be `<ref-des>_<yyyy>-<mm>` where the yyyy-mm is the provided start date.
 
 ### Installation
 1. Create a Python 3.6+ Conda or Pip environment with numpy, requests, pandas, urllib3, datetime, matplotlib, sys, and os (some of these may be included by default)
