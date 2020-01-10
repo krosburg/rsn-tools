@@ -8,6 +8,7 @@ Created on Thu Sep 26 14:12:23 2019
 from datetime import datetime, timedelta
 from core.streams import rdList
 from core.ooicreds import PROD_CREDENTIALS, DEV01_CREDENTIALS, DEV03_CREDENTIALS
+from requests.exceptions import Timeout
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import numpy as np
@@ -131,7 +132,7 @@ class InstDataObj(object):
         print('Requesting ' + self.pnames[0] + ' data from M2M...', end='')
         try:
             raw_data = requests.get(self.URL, auth=(username, token),
-                                    timeout=20, verify=False)
+                                    timeout=60, verify=False)
             # Exit if bad status code
             if raw_data.status_code == 404:
                 print(' FAIL')
@@ -144,6 +145,10 @@ class InstDataObj(object):
                 return False
             else:
                 print(' Done')
+                
+        except Timeout:
+            print(' FAIL')
+            print('ERROR: Request timed out.\n')
                 
         except Exception as err:
             print(' FAIL')

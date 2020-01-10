@@ -1,5 +1,9 @@
 # Release Notes
 
+# Version 2.3.1
+* Extended timeout from 20 to 60 seconds in @core.engine.get_data()@.
+* Added exception handling for @requests.exceptions.Timeout@.
+
 # Version 2.3.0
 * #219 - Added `core.engine.get_metadata_times()` function for requesting start/end times for a stream.
 
