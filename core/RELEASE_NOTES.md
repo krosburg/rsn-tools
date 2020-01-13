@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 2.3.2
+* #231 - Added missing instruments to `core.streams.rdList`.
+
 ## Version 2.3.1
 * Extended timeout from 20 to 60 seconds in `core.engine.get_data()`.
 * Added exception handling for `requests.exceptions.Timeout`.
