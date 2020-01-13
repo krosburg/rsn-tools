@@ -34,6 +34,13 @@ rdList = {
       "testPD": "PD674",
       "pdName": "roll"
    },
+   "RS03AXPS-PC03A-05-ADCPTD302": {
+      "method": "streamed",
+      "stream": "adcp_velocity_beam",
+      "fullrd": "RS03AXPS/PC03A/05-ADCPTD302",
+      "testPD": "PD674",
+      "pdName": "roll"
+   },
    "RS01SLBS-LJ01A-10-ADCPTE101": {
       "method": "streamed",
       "stream": "adcp_velocity_beam",
@@ -152,7 +159,7 @@ rdList = {
       "fullrd": "RS03ASHS/MJ03B/10-CTDPFB304",
       "testPD": "PD908",
       "pdName": "seawater_temperature"
-   },
+   },           
    "RS01SLBS-LJ01A-12-DOSTAD101": {
       "method": "streamed",
       "stream": "do_stable_sample",
@@ -202,6 +209,13 @@ rdList = {
       "testPD": "PD14",
       "pdName": "dissolved_oxygen"
    },
+   "RS03INT1-MJ03C-07-D1000A301": {
+      "method": "streamed",
+      "stream": "d1000_sample",
+      "fullrd": "RS03INT1/MJ03C/07-D1000A301",
+      "testPD": "PD1048",
+      "pdName": "temperature1"
+   },           
    "RS01SBPS-PC01A-4C-FLORDD103": {
       "method": "streamed",
       "stream": "flort_d_data_record",
@@ -227,6 +241,13 @@ rdList = {
       "method": "streamed",
       "stream": "flort_d_data_record",
       "fullrd": "RS03AXPS/SF03A/3A-FLORTD301",
+      "testPD": "PD22",
+      "pdName": "fluorometric_chlorophyll_a"
+   },
+   "RS03AXPS-PC03A-4C-FLORDD303": {
+      "method": "streamed",
+      "stream": "flort_d_data_record",
+      "fullrd": "RS03AXPS/PC03A/4C-FLORDD303",
       "testPD": "PD22",
       "pdName": "fluorometric_chlorophyll_a"
    },
