@@ -290,50 +290,50 @@ rdList = {
       "method": "streamed",
       "stream": "optaa_sample",
       "fullrd": "RS01SBPS/SF01A/3B-OPTAAD101",
-      "testPD": "PD587",
-      "pdName": "pressure_counts"
+      "testPD": "PD589",
+      "pdName": "external_temp_raw"
    },
    "RS01SLBS-LJ01A-11-OPTAAC103": {
       "method": "streamed",
       "stream": "optaa_sample",
       "fullrd": "RS01SLBS/LJ01A/11-OPTAAC103",
-      "testPD": "PD587",
-      "pdName": "pressure_counts"
+      "testPD": "PD589",
+      "pdName": "external_temp_raw"
    },
    "CE04OSBP-LJ01C-08-OPTAAC104": {
       "method": "streamed",
       "stream": "optaa_sample",
       "fullrd": "CE04OSBP/LJ01C/08-OPTAAC104",
-      "testPD": "PD587",
-      "pdName": "pressure_counts"
+      "testPD": "PD589",
+      "pdName": "external_temp_raw"
    },
    "CE04OSPS-SF01B-3B-OPTAAD105": {
       "method": "streamed",
       "stream": "optaa_sample",
       "fullrd": "CE04OSPS/SF01B/3B-OPTAAD105",
-      "testPD": "PD587",
-      "pdName": "pressure_counts"
+      "testPD": "PD589",
+      "pdName": "external_temp_raw"
    },
    "CE02SHBP-LJ01D-08-OPTAAD106": {
       "method": "streamed",
       "stream": "optaa_sample",
       "fullrd": "CE02SHBP/LJ01D/08-OPTAAD106",
-      "testPD": "PD587",
-      "pdName": "pressure_counts"
+      "testPD": "PD589",
+      "pdName": "external_temp_raw"
    },
    "RS03AXPS-SF03A-3B-OPTAAD301": {
       "method": "streamed",
       "stream": "optaa_sample",
       "fullrd": "RS03AXPS/SF03A/3B-OPTAAD301",
-      "testPD": "PD587",
-      "pdName": "pressure_counts"
+      "testPD": "PD589",
+      "pdName": "external_temp_raw"
    },
    "RS03AXBS-LJ03A-11-OPTAAC303": {
       "method": "streamed",
       "stream": "optaa_sample",
       "fullrd": "RS03AXBS/LJ03A/11-OPTAAC303",
-      "testPD": "PD587",
-      "pdName": "pressure_counts"
+      "testPD": "PD589",
+      "pdName": "external_temp_raw"
    },
    "RS01SBPS-SF01A-3C-PARADA101": {
       "method": "streamed",
@@ -517,10 +517,10 @@ rdList = {
       "testPD": "PD674",
       "pdName": "roll"
    },
-      "RS03AXPS-PC03A-06-VADCPA301": {
+   "RS03AXPS-PC03A-06-VADCPA301": {
       "method": "streamed",
       "stream": "vadcp_velocity_beam",
-      "fullrd": "	RS03AXPS/PC03A/06-VADCPA301",
+      "fullrd": "RS03AXPS/PC03A/06-VADCPA301",
       "testPD": "PD674",
       "pdName": "roll"
    },

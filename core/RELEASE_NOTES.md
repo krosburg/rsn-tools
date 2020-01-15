@@ -1,5 +1,9 @@
 # Release Notes
 
+## Version 2.3.1
+* Changed OPTAA default variable from `pressure_counts` to `external_temp_raw`.
+* Added option to display a blank plot if no data returned in `core.engine.go()`.
+
 ## Version 2.3.2
 * #231 - Added missing instruments to `core.streams.rdList`.
 

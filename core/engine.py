@@ -188,7 +188,7 @@ class InstDataObj(object):
         plt.grid()
     
     
-    def go(self, beginDT, endDT, srv, fsize=(15, 4), DEBUG=False):
+    def go(self, beginDT, endDT, srv, fsize=(15, 4), DEBUG=False, err_plt=True):
         """ Builds URL, get data, then plots.
             Takes in ISO format begin and end times, server name
             ('prod', 'dev03', etc.) and an optional figure size as a tuple
@@ -198,3 +198,11 @@ class InstDataObj(object):
         if self.get_data(srv): 
             # Plot
             self.quickPlot(beginDT, endDT, fsize=fsize)
+        else:
+            if err_plt:
+                fig = plt.figure(figsize=fsize)
+                plt.plot()
+                plt.text(0, 0, 'ERROR',
+                         ha='center', va='center', size=40, color='red')
+                plt.text(0, -0.02, 'No Data Returned from M2M Query',
+                         ha='center', va='center', size=20, color='black')
