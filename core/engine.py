@@ -174,6 +174,16 @@ class InstDataObj(object):
             self.y = np.array(self.y, dtype=np.float)
         print(' Done\n')
         return True
+
+    
+    def print(self):
+        print('=== Instrument Object ====')
+        print('Ref-des:  ' + self.ref_des)
+        print('PD Nums:  ' + self.pdnums)
+        for pname in self.pnames:
+            print('PD Names: ' + pname)
+        print('Method:   ' + self.method)
+        print('Stream:   ' + self.stream)
         
     
     def quickPlot(self, beginDT, endDT, fsize=(15, 4)):
