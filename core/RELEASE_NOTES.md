@@ -1,6 +1,10 @@
 # Release Notes
 
-## Version 2.3.1
+## Version 2.3.4
+* Added parameter print function to `InstDataObj` class.
+* Changed default parameter for SPKIRA sensors in `core.streams.rdList`
+
+## Version 2.3.3
 * Changed OPTAA default variable from `pressure_counts` to `external_temp_raw`.
 * Added option to display a blank plot if no data returned in `core.engine.go()`.
 

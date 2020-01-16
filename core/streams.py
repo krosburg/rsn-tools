@@ -479,22 +479,22 @@ rdList = {
       "method": "streamed",
       "stream": "spkir_data_record",
       "fullrd": "RS01SBPS/SF01A/3D-SPKIRA101",
-      "testPD": "PD2645",
-      "pdName": "spkir_downwelling_vector"
+      "testPD": "PD1102",
+      "pdName": "internal_temperature"
    },
    "CE04OSPS-SF01B-3D-SPKIRA102": {
       "method": "streamed",
       "stream": "spkir_data_record",
       "fullrd": "CE04OSPS/SF01B/3D-SPKIRA102",
-      "testPD": "PD2645",
-      "pdName": "spkir_downwelling_vector"
+      "testPD": "PD1102",
+      "pdName": "internal_temperature"
    },
    "RS03AXPS-SF03A-3D-SPKIRA301": {
       "method": "streamed",
       "stream": "spkir_data_record",
       "fullrd": "RS03AXPS/SF03A/3D-SPKIRA301",
-      "testPD": "PD2645",
-      "pdName": "spkir_downwelling_vector"
+      "testPD": "PD1102",
+      "pdName": "internal_temperature"
    },
    "RS03ASHS-MJ03B-07-TMPSFA301": {
       "method": "streamed",
