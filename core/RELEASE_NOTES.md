@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 2.3.5
+* #246 - Added an 'all' option to `core.engine.get_metadata_times()` to show timing metadata for all streams associated with a reference designator.
+
 ## Version 2.3.4
 * Added parameter print function to `InstDataObj` class.
 * Changed default parameter for SPKIRA sensors in `core.streams.rdList`

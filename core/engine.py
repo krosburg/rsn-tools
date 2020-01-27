@@ -122,6 +122,8 @@ class InstDataObj(object):
             print(' FAIL')
             print('ERROR: Request failed with: %i\n' % metadata.status_code)
             return []
+        if stream.lower() == 'all':
+            return metadata.json()
         return [x for x in metadata.json() if x['stream'] == stream][0]
             
             
