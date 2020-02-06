@@ -21,11 +21,9 @@ def getCreds(srv):
     """ Get credentials based on server specification """
     if srv is "prod":
         return PROD_CREDENTIALS
-        #return ('OOIAPI-25Q505KHEZGN7M', '8Y7ID166LLNXU7')
     elif srv is "dev01" or srv is "pre-prod":
         return DEV01_CREDENTIALS
     elif srv is "dev03" or srv is "test":
-        #return ('OOIAPI-1ADRQA60R9CG8G', 'TEMP-TOKEN-0EMZVNOD7BK9LS')
         return DEV03_CREDENTIALS
     else:
         raise Exception("Credentials not configured for " + srv + ". Abort!")
