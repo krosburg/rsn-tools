@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.0.0
+* Integrated Dan Mergens' playback tool as `core.m2mlib` and `core.playback`.
+
 ## Version 2.3.5
 * #246 - Added an 'all' option to `core.engine.get_metadata_times()` to show timing metadata for all streams associated with a reference designator.
 
