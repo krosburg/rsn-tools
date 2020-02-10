@@ -8,6 +8,7 @@ Adapted from Dan Mergens' cabled playback tool
 # == IMPORRTS ===== #
 import sys, json
 sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
+from datetime import datetime, timedelta
 from core.m2mlib import MachineToMachine
 
 
@@ -133,6 +134,7 @@ def parser_driver(refdes):
     return driver
 
 
+# TODO: ADD A SWITCH FOR OLD SENSORS
 def create_filemasks(refdes):
     """file globs specific to the sub-range from the most recent outage"""
     _, node, _, sensor = refdes.split('-', 3)
@@ -143,8 +145,6 @@ def create_filemasks(refdes):
         sensor = [sensor]
     # print(sensor)
     for s in sensor:
-        #filemasks.append(filemask_glob_format.format(node=node.lower(), sensor=s))
-        #filemasks.append(filemask_glob_old.format(node=node.lower(), sensor=s))
         if 'DOSTA' in s:
             filemasks.append(filemask_glob_dosta.format(refdes=refdes))
         else:
@@ -223,12 +223,23 @@ def cabledRequestFactory(username, refdes, filemasks, file_range=None,
     return request
 
 
-def run_playback(server, user, refdes, file_range=None, data_range=None, force=False, DEBUG=False):
+def get_filerange(data_range):
+    """Returns a file date range from a gap date range."""
+    if data_range is None:
+        return None
+    fmt = '%Y-%m-%d'
+    tend = datetime.strptime(data_range[1][0:10], fmt) + timedelta(days=1)
+    return (data_range[0][0:10], datetime.strftime(tend, fmt))
+    
+
+
+def run_playback(server, refdes, data_range=None, force=False, DEBUG=False):
     # Create M2M Object
-    m2m = MachineToMachine(server, user)
+    m2m = MachineToMachine(server)
     m2m.context()
     filemasks = create_filemasks(refdes)
-    request = cabledRequestFactory(user, refdes, filemasks, file_range=file_range, 
+    request = cabledRequestFactory(m2m.username, refdes, filemasks,
+                                   file_range=get_filerange(data_range), 
                                    data_range=data_range, force=force)
     if DEBUG:
         print(json.dumps(request, indent=4))
@@ -236,18 +247,19 @@ def run_playback(server, user, refdes, file_range=None, data_range=None, force=F
     return response
 
 
-def preview_playback(server, user, refdes, file_range=None, data_range=None, force=False, DEBUG=False):
+def preview_playback(server, refdes, data_range=None, force=False, DEBUG=False):
     # Create M2M Object
-    m2m = MachineToMachine(server, user)
+    m2m = MachineToMachine(server)
     m2m.context()
     filemasks = create_filemasks(refdes)
-    request = cabledRequestFactory(user, refdes, filemasks, file_range=file_range, 
+    request = cabledRequestFactory(m2m.username, refdes, filemasks,
+                                   file_range=get_filerange(data_range), 
                                    data_range=data_range, force=force)
     print(json.dumps(request, indent=4))
     
     
-def view_status(job_list, server, user):
-    m2m = MachineToMachine(server, user)
+def view_status(job_list, server):
+    m2m = MachineToMachine(server)
     if type(job_list) != list:
         job_list = [job_list]
     for job in job_list:

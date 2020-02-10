@@ -4,6 +4,7 @@
 * Restructured `core.ooicrds` (and correspoinding example) to include username.
 * Added `core.m2mlib.getUser()` to retrieve username from `core.ooicreds`.
 * Modified `core.m2mlib.MachineToMachine.__init__()` to extract username from `core.ooicreds`
+* Updated `core.playback` to reflect above changes.
 
 ## Version 3.0.0
 * Integrated Dan Mergens' playback tool as `core.m2mlib` and `core.playback`.
