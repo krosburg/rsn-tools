@@ -34,14 +34,20 @@ def setBaseURL(srv):
      else:
         raise Exception("BASEURL not configured for " + srv + ". Abort!")
 
+
+def getUser(srv):
+    if core.ooicreds.OOI_USERNAME is 'username':
+        raise Exception("No username defined in OOICREDS. Abort!")
+    else:
+        return core.ooicreds.OOI_USERNAME
         
 
 # == CLASS DEFINITIONS ====================================================== #
 class MachineToMachine(object):
-    def __init__(self, srv, username='null'):
+    def __init__(self, srv):
         self.base_url = setBaseURL(srv)
         self.api_user, self.api_key = getCreds(srv)
-        self.username = username
+        self.username = getUser(srv)
         self.auth = (self.api_user, self.api_key)
         self.inv_url = self.base_url + '/api/m2m/12576/sensor/inv'
         self.ingest_url = self.base_url + '/api/m2m/12589/ingestrequest'
