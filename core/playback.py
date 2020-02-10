@@ -228,6 +228,7 @@ def get_filerange(data_range):
     if data_range is None:
         return None
     fmt = '%Y-%m-%d'
+    # Add one day to reflect exclusive end time in playback engine
     tend = datetime.strptime(data_range[1][0:10], fmt) + timedelta(days=1)
     return (data_range[0][0:10], datetime.strftime(tend, fmt))
     

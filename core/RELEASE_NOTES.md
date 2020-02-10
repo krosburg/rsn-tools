@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.1.1
+* Removed requirement to specify file dates by adding file date generation from gap date specification.
+
 ## Version 3.1.0
 * Restructured `core.ooicrds` (and correspoinding example) to include username.
 * Added `core.m2mlib.getUser()` to retrieve username from `core.ooicreds`.
