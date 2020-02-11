@@ -223,6 +223,101 @@ def cabledRequestFactory(username, refdes, filemasks, file_range=None,
     return request
 
 
+class gapObj(object):
+    def __init__(self, refdes, t_start, t_end, jobID=None):
+        self.refdes= refdes
+        self.start = t_start
+        self.end = t_end
+        self.job = jobID
+        self.test = 'Not Started'
+        self.prod = 'Not Started'
+        
+    def update(self, jobID, test_status=None, prod_status=None, force=False):
+        if force or self.job is None:
+            self.job = jobID
+        if test_status is not None:
+            self.test = test_status
+        if prod_status is not None:
+            self.prod = prod_status
+        
+    def print(self):
+        print('-- %s ----------' % self.refdes)
+        print('  * Start: %s' % self.start)
+        print('  * End:   %s' % self.end)
+        print('  * JobID: ', end='')
+        if self.job is not None:
+            print(self.job)
+        else:
+            print('')
+        print('  * Test:  %s' % self.test)
+        print('  * Prod:  %s' % self.prod)
+        
+    def dump(self):
+        return {'refdes': self.refdes,
+                'start': self.start,
+                'end': self.end,
+                'job': self.job,
+                'test': self.test,
+                'prod': self.prod}
+        
+        
+class gapListObj(object):
+    """Data structure (dictionary) that holds gapObjs tied to a refdes."""
+    def __init__(self):
+        self.data = {}
+        self.run_date = datetime.utcnow()
+        self.updated = datetime.utcnow()
+        
+    def add(self, refdes, t_start, t_end, jobID=None):
+        """ Adds a new gapObj to the gap list, if refdes not present, adds."""
+        new_gap = gapObj(refdes, t_start, t_end, jobID)
+        if refdes in self.data:
+            self.data[refdes].append(new_gap)
+        else:
+            self.data[refdes] = [new_gap]
+        self.touch()
+            
+    def update(self, refdes, jobID, test_status=None, prod_status=None, newID=None):
+        """Update various gap job information. Uses refdes + jobID combo to
+        lookup correct entry. If newID is given, the jobID will be updated."""
+        if test_status is None and prod_status is None and newID is None:
+            return False
+        for gap in self.data[refdes]:
+            if gap.job == jobID:
+                if newID is None:
+                    gap.update(jobID, test_status, prod_status)
+                else:
+                    gap.update(newID, test_status, prod_status, force=True)
+                self.touch()
+                return True
+            
+    def touch(self):
+        self.updated = datetime.utcnow()
+        
+    def stat(self):
+        print('Run Date: ' + datetime.isoformat(self.run_date)[:-3] + 'Z')
+        print('Modified: ' + datetime.isoformat(self.updated)[:-3] + 'Z')
+        
+    def print_all(self):
+        for rd in self.data:
+            for gap in self.data[rd]:
+                gap.print()
+
+    # TODO: implement dump to file
+    def dump(self, filename=None):
+        gapList = {}
+        for rd in self.data:
+            this_item = []
+            for gap in self.data[rd]:
+                this_item.append(gap.dump())
+            gapList[rd] = this_item
+        if filename is None:
+            print(json.dumps(gapList, indent=4))
+        else:
+            with open(filename, 'w+') as f:
+                f.write(json.dumps(gapList, indent=3))
+            
+
 def get_filerange(data_range):
     """Returns a file date range from a gap date range."""
     if data_range is None:
@@ -232,7 +327,6 @@ def get_filerange(data_range):
     tend = datetime.strptime(data_range[1][0:10], fmt) + timedelta(days=1)
     return (data_range[0][0:10], datetime.strftime(tend, fmt))
     
-
 
 def run_playback(server, refdes, data_range=None, force=False, DEBUG=False):
     # Create M2M Object
@@ -257,6 +351,13 @@ def preview_playback(server, refdes, data_range=None, force=False, DEBUG=False):
                                    file_range=get_filerange(data_range), 
                                    data_range=data_range, force=force)
     print(json.dumps(request, indent=4))
+    
+    
+# TODO: Finish this
+def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
+    for refdes in rdList:
+        print('not implemented yet')
+    
     
     
 def view_status(job_list, server):

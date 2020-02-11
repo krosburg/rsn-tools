@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.2.1
+* Added gap list data structure object and data gap object and associated functions and helpers.
+
 ## Version 3.1.1
 * Removed requirement to specify file dates by adding file date generation from gap date specification.
 
