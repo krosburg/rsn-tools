@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.2.2
+* Added bulk playback routine to `core.playback` module.
+
 ## Version 3.2.1
 * Added gap list data structure object and data gap object and associated functions and helpers.
 

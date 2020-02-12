@@ -353,10 +353,24 @@ def preview_playback(server, refdes, data_range=None, force=False, DEBUG=False):
     print(json.dumps(request, indent=4))
     
     
-# TODO: Finish this
+# TODO: TEST THIS
 def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
-    for refdes in rdList:
-        print('not implemented yet')
+    for refdes in rdList.data:
+        for gap in rdList.data[refdes]:
+            data_gap = (gap.start, gap.end)
+            # Preview Only Mode Just Prints the Requests
+            if preview_only:
+                preview_playback('dev03', refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
+            else:
+                response = run_playback('dev03', refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
+                if response:
+                    print(refdes, response.json())
+                    if 'dev' in server or 'test' in server:
+                        gap.update(response.json()['id'], test_status='PENDING')
+                    else:
+                        gap.update(response.json()['id'], prod_status='PENDING')
+                else:
+                    print('no response for playback request of %s' % refdes)
     
     
     
