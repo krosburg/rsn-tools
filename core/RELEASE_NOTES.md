@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.2.3
+* Modified `core.engine.InstDataObj.get_metadata_times()` to allow partial searches on stream names for `metadata/times` return.
+
 ## Version 3.2.2
 * Added bulk playback routine to `core.playback` module.
 

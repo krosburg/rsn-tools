@@ -122,7 +122,8 @@ class InstDataObj(object):
             return []
         if stream.lower() == 'all':
             return metadata.json()
-        return [x for x in metadata.json() if x['stream'] == stream][0]
+        #return [x for x in metadata.json() if x['stream'] == stream][0]
+        return [x for x in metadata.json() if stream in x['stream']]
             
             
     def get_data(self, srv):
