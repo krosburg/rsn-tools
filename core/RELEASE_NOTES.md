@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.2.4
+* Bug fixes and a job list print function.
+
 ## Version 3.2.3
 * Modified `core.engine.InstDataObj.get_metadata_times()` to allow partial searches on stream names for `metadata/times` return.
 

@@ -316,6 +316,16 @@ class gapListObj(object):
         else:
             with open(filename, 'w+') as f:
                 f.write(json.dumps(gapList, indent=3))
+                
+    def jobs(self, print=False):
+        job_list = []
+        for rd in self.data:
+            for gap in self.data[rd]:
+                if gap.job is not None:
+                    job_list.append(gap.job)
+                    if print:
+                        print('%s, %s' % (rd, gap.job))
+        return job_list
             
 
 def get_filerange(data_range):
@@ -350,22 +360,27 @@ def preview_playback(server, refdes, data_range=None, force=False, DEBUG=False):
     request = cabledRequestFactory(m2m.username, refdes, filemasks,
                                    file_range=get_filerange(data_range), 
                                    data_range=data_range, force=force)
-    print(json.dumps(request, indent=4))
+    print(json.dumps(request, indent=4) + '\n')
     
     
 # TODO: TEST THIS
 def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
+    if not preview_only and input('Are you sure you want to play back to ' + server + '? [y/n]: ').lower() != 'y':
+        print('USER ABORTED PLAYBACK. EXITING.')
+        return False
     for refdes in rdList.data:
         for gap in rdList.data[refdes]:
             data_gap = (gap.start, gap.end)
             # Preview Only Mode Just Prints the Requests
             if preview_only:
-                preview_playback('dev03', refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
+                preview_playback(server, refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
             else:
-                response = run_playback('dev03', refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
+                # Sumit the Request
+                response = run_playback(server, refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
                 if response:
+                    # Display response and update job id field of each gap
                     print(refdes, response.json())
-                    if 'dev' in server or 'test' in server:
+                    if 'dev' in server or 'test' in server or 'pre' in server:
                         gap.update(response.json()['id'], test_status='PENDING')
                     else:
                         gap.update(response.json()['id'], prod_status='PENDING')
