@@ -10,13 +10,14 @@ sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from core.streams import rdList
 
 
+# == FUNCTIONS FOR CLI INTERFACE ============================================ #
 def nextItem(args, index):
     try:
         return args[index + 1], index + 1
     except IndexError:
         return None, index + 1
 
-# TODO: Finish this
+
 def print_help():
     print('USAGE: python rsn_gaps.py [options]')
     print('  -a,--all             - Use all reference designators. Ignores -r input. Must be ')
@@ -25,8 +26,10 @@ def print_help():
     print('  -f <filename>        - Directs the program to read reference designators and times from')
     print('                         the file spcified by <filename>. Must be first argument. Cannot')
     print('                         be used with -r, -t, -a, --refes, --times, or --all.\n')
+    print('  -f --help            - Displays file specific help w/ format and usage info.\n')
     print('  --file=<filename>    - Same as -f, but different syntax. Must be first argument. Cannot')
     print('                         be used with -r, -t, -a, --refes, --times, or --all.\n')
+    print('  --file=help          - Displays file specific help w/ format and usage info.\n')
     print('  -h,--help            - Display this help message. Must be only argument.\n')
     print('  -r <rd1> <rd2>...    - Allows specification of reference designators to be used. -r is')
     print('                         followed by any number of reference designators separated by spaces.\n')
@@ -36,10 +39,50 @@ def print_help():
     print('  --times=<t1>,<t2>     - Same as -t, but time windows are supplied in a comma separated list')
     print('                          with no spaces.\n')
     
-# TODO: Finish this
+
+def print_file_help():
+    print('USAGE: python rsn_gaps.py -f <filename>')
+    print('       python rsn_gaps.py --file=<filename>\n')
+    print('HELP:  python rsn_gaps.py -f --help')
+    print('       python rsn_gaps.py --file=help\n')
+    print('File format:')
+    print('   [refdes]')
+    print('   <refdes1>')
+    print('   <refdes2>\n')
+    print('   [times]')
+    print('   <YYYY-MM>')
+    print('   <YYYY-MM>\n')
+
+
 def read_arg_file(filename):
-    print('Not yet implemented reading from file: ' + filename)
-    return None, None
+    read_refdes = False
+    read_times = False
+    R = []
+    T = []
+    # Display File Help
+    if filename == 'help' or filename == '--help':
+        print_file_help()
+        return [], []
+    try:
+        with open(filename, 'r') as f:
+            for line in f:
+                # Sanitize
+                line = line.split('\n')[0]
+                if line.startswith('[refdes]'):
+                    read_refdes = True
+                    read_times = False
+                elif line.startswith('[times]'):
+                    read_refdes = False
+                    read_times = True
+                elif read_refdes:
+                    if line[0:2] in ['CE', 'RS']:
+                        R.append(line)
+                elif read_times:
+                    if int(line[0:4]) > 2003:
+                        T.append(line)
+    except FileNotFoundError:
+        print('ERROR: Could not read file %s' % filename, file=sys.stderr)
+    return R, T
 
 
 def get_args_helper(ii):
@@ -49,6 +92,7 @@ def get_args_helper(ii):
         items.append(arg)
         arg, ii = nextItem(sys.argv, ii)
     return ii, items
+
 
 def get_args():
     ii = 1
@@ -60,7 +104,7 @@ def get_args():
     want_playback = True
     # Handle no arguments case
     if nargs < 1:
-        print('Improper syntax!\n')
+        print('Improper syntax!\n', file=sys.stderr)
         print_help()
         return 1
     # Handle -h or --help arguments
@@ -107,10 +151,10 @@ def get_args():
     # Error Checking
     if not from_file:
         if len(cabled_refdes) == 0:
-            print('Invalid syntax: no reference designators specified.')
+            print('Invalid syntax: no reference designators specified.', file=sys.stderr)
             return 1
         if len(time_windows) == 0:
-            print('Invalid syntax: no time windows specified.')
+            print('Invalid syntax: no time windows specified.', file=sys.stderr)
             return 1
     # Assemble Output
     return {'refdes': cabled_refdes,
