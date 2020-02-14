@@ -303,7 +303,6 @@ class gapListObj(object):
             for gap in self.data[rd]:
                 gap.print()
 
-    # TODO: implement dump to file
     def dump(self, filename=None):
         gapList = {}
         for rd in self.data:
@@ -363,7 +362,6 @@ def preview_playback(server, refdes, data_range=None, force=False, DEBUG=False):
     print(json.dumps(request, indent=4) + '\n')
     
     
-# TODO: TEST THIS
 def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
     if not preview_only and input('Are you sure you want to play back to ' + server + '? [y/n]: ').lower() != 'y':
         print('USER ABORTED PLAYBACK. EXITING.')
