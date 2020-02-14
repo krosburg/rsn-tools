@@ -8,6 +8,10 @@ Created on Fri Jan  3 12:08:51 2020
 import sys
 sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from core.streams import rdList
+from core.playback import gapListObj
+from datetime import datetime, timedelta
+import matplotlib.dates as mdates
+import numpy as np
 
 
 # == FUNCTIONS FOR CLI INTERFACE ============================================ #
@@ -20,21 +24,24 @@ def nextItem(args, index):
 
 def print_help():
     print('USAGE: python rsn_gaps.py [options]')
-    print('  -a,--all             - Use all reference designators. Ignores -r input. Must be ')
-    print('                         first argument. Cannot be used with -r, -f, --refdes, or --file.\n')
-    print('  -c,--check-only      - Do not run playback (find gaps only).\n')
-    print('  -f <filename>        - Directs the program to read reference designators and times from')
-    print('                         the file spcified by <filename>. Must be first argument. Cannot')
-    print('                         be used with -r, -t, -a, --refes, --times, or --all.\n')
-    print('  -f --help            - Displays file specific help w/ format and usage info.\n')
-    print('  --file=<filename>    - Same as -f, but different syntax. Must be first argument. Cannot')
-    print('                         be used with -r, -t, -a, --refes, --times, or --all.\n')
-    print('  --file=help          - Displays file specific help w/ format and usage info.\n')
-    print('  -h,--help            - Display this help message. Must be only argument.\n')
-    print('  -r <rd1> <rd2>...    - Allows specification of reference designators to be used. -r is')
-    print('                         followed by any number of reference designators separated by spaces.\n')
-    print('  --refdes=<rd1>,<rd2> - Same as -r, but reference designators are supplied in a comma separ-')
-    print('                         ated list with no spaces.\n')
+    print('  -a,--all              - Use all reference designators. Ignores -r input. Must be ')
+    print('                          first argument. Cannot be used with -r, -f, --refdes, or --file.\n')
+    print('  -c,--check-only       - Do not run playback (find gaps only).\n')
+    print('  -f <filename>         - Directs the program to read reference designators and times from')
+    print('                          the file spcified by <filename>. Must be first argument. Cannot')
+    print('                          be used with -r, -t, -a, --refes, --times, or --all.\n')
+    print('  -f --help             - Displays file specific help w/ format and usage info.\n')
+    print('  --file=<filename>     - Same as -f, but different syntax. Must be first argument. Cannot')
+    print('                          be used with -r, -t, -a, --refes, --times, or --all.\n')
+    print('  --file=help           - Displays file specific help w/ format and usage info.\n')
+    print('  -h,--help             - Display this help message. Must be only argument.\n')
+    print('  -r <rd1> <rd2>...     - Allows specification of reference designators to be used. -r is')
+    print('                          followed by any number of reference designators separated by spaces.\n')
+    print('  --refdes=<rd1>,<rd2>  - Same as -r, but reference designators are supplied in a comma separ-')
+    print('                          ated list with no spaces.\n')
+    print('  -s <dev03|dev01|prod> - Specifies playback server. If ommitted, dev03 is used by default. Ig-')
+    print('                          nored if -c or --check-only is used.\n')
+    print('  --server=<server>     - Same as -s.\n')
     print('  -t <t1> <t2>...       - Allows specification of time window starting times. Sytax same as -r.')
     print('  --times=<t1>,<t2>     - Same as -t, but time windows are supplied in a comma separated list')
     print('                          with no spaces.\n')
@@ -102,15 +109,16 @@ def get_args():
     allRD = False
     from_file = False
     want_playback = True
+    server = 'dev03'
     # Handle no arguments case
     if nargs < 1:
         print('Improper syntax!\n', file=sys.stderr)
         print_help()
-        return 1
+        return None
     # Handle -h or --help arguments
     if sys.argv[1] == '-h' or sys.argv[1] == '--help':
         print_help()
-        return 0
+        return None
     if sys.argv[1] == '-a' or sys.argv[1] == '--all':
         cabled_refdes = [rd for rd in rdList]
         allRD = True
@@ -143,6 +151,12 @@ def get_args():
         elif arg == '-c' or arg == '--check-only':
             want_playback = False
             arg, ii = nextItem(sys.argv, ii)
+        elif arg == '-s': 
+            server, ii = nextItem(sys.argv, ii)
+            arg, ii = nextItem(sys.argv, ii)
+        elif arg == '--server':
+            server = arg.split('=')[-1]
+            arg, ii = nextItem(sys.argv, ii)
         # Ignore other arguments
         else:
             if arg not in ['-f', '-h', '-c', '-a', '--file', '--help', '--all', '--check-only']:
@@ -152,38 +166,106 @@ def get_args():
     if not from_file:
         if len(cabled_refdes) == 0:
             print('Invalid syntax: no reference designators specified.', file=sys.stderr)
-            return 1
+            return None
         if len(time_windows) == 0:
             print('Invalid syntax: no time windows specified.', file=sys.stderr)
-            return 1
+            return None
+        if want_playback and server not in ['prod', 'test', 'dev01', 'dev03']:
+            print('Invalid syntax: no valid playback server specified.', file=sys.stderr)
+            return None
     # Assemble Output
     return {'refdes': cabled_refdes,
             'times': time_windows,
-            'pbflag': want_playback}
-                
-                
-
-
-# Main Program
-cli_args = get_args()
-
-if cli_args != 1:
-    msg = '\n\nrsn_gaps.py will run on reference designators'
-    if cli_args['refdes'] is None and cli_args['times'] is None:
-        msg += ' read from the specified file,\n'
-    else:
-        msg += ':\n' + '\n'.join(cli_args['refdes']) + '.\n'
-    msg += 'using times'
-    if cli_args['refdes'] is None and cli_args['times'] is None:
-        msg += ' read from the specified file.\n'
-    else:
-        msg += ':\n' + '\n'.join(cli_args['times']) + '.\n'
-    msg += 'Gaps will'
-    if not cli_args['pbflag']:
-        msg += ' not'
-    msg += ' be played back.'
+            'pbflag': want_playback,
+            'server': server}
     
-    print(msg)
+    
+# == VARIABLES FOR MAIN PROGRAM ============================================= #
+# Cutoff and Time Vairables
+cutoff_hours = 24
+cutoff_frac = cutoff_hours/24.0
+dt_cuttoff = timedelta(hours=cutoff_hours)
+t_fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
+t_suffix = '-01T00:00:00.000Z'
+                
+                
+
+# == FUNCTIONS FOR MAIN PROGRAM ============================================= #
+def tConv(t):
+    return mdates.num2date(t).replace(tzinfo=None)
+
+def get_end_date(start_date):
+    Y, M = start_date.split('-')
+    if M == '12':
+        return str(int(Y) + 1) + '-01'
+    return Y + str(int(M) + 1)
+
+def build_window(start_date, t_suffix='-01T00:00:00.000Z'):
+    return (start_date + t_suffix,
+            get_end_date(start_date) + t_suffix)
+
+def tPrint(t, tp_fmt='%Y-%m-%dT%H:%M:%SZ'):
+    if type(t) is not datetime:
+        t = tConv(t)
+    return t.strftime(tp_fmt)
+
+def find_gaps(rd, twind):
+    """Find gaps for a single refdes and time window. Returns list of tuples 
+    containing gap start and end times [(start, end), ...]"""
+    print('find_gaps() not yet implemented')
+    return []
+
+
+def build_gap_list(cabled_refdes, time_windows):
+    gap_list = gapListObj()
+    for refdes in cabled_refdes:
+        for window in time_windows:
+            for gap in find_gaps(refdes, window):
+                gap_list.add(refdes, gap[0], gap[1])
+    return gap_list
+
+
+
+# == Main Program =========================================================== #
+# Get CLI Arguments or Quit
+cli_args = get_args()
+if cli_args is None:
+    quit()
+
+# Server Selection Check
+if cli_args['server'] == 'prod':
+    pmesg = '\n== WARNING ================================================\n'
+    pmesg += ' Hey buddy...\n You set playback server to PRODUCTION...\n'
+    pmesg += '\n Are you sure you want to do that? [yes/n]: '
+    if input(pmesg).lower() != 'yes':
+        print("\nGood. I didn't think so. Aborting.")
+        quit()
+    else:
+        print('\nYour call... Carrying on (but not keeping calm).\n')
+    
+    
+# Create the list of gaps
+gap_list = build_gap_list(cli_args['refdes'], cli_args['times'])
+
+msg = '\n\nrsn_gaps.py will run on reference designators'
+if cli_args['refdes'] is None and cli_args['times'] is None:
+    msg += ' read from the specified file,\n'
+else:
+    msg += ':\n' + '\n'.join(cli_args['refdes']) + '.\n'
+msg += 'using times'
+if cli_args['refdes'] is None and cli_args['times'] is None:
+    msg += ' read from the specified file.\n'
+else:
+    msg += ':\n' + '\n'.join(cli_args['times']) + '.\n'
+msg += 'Gaps will'
+if not cli_args['pbflag']:
+    msg += ' not'
+msg += ' be played back'
+if cli_args['pbflag']:
+    msg += ' on ' + cli_args['server']
+msg += '.'
+
+print(msg)
 
                 
                 
