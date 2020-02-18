@@ -7,6 +7,7 @@ Created on Fri Jan  3 12:08:51 2020
 # == IMPORTS ================================================================ #
 import sys
 sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
+from core.engine import InstDataObj
 from core.streams import rdList
 from core.playback import gapListObj
 from datetime import datetime, timedelta
@@ -197,23 +198,76 @@ def tConv(t):
 def get_end_date(start_date):
     Y, M = start_date.split('-')
     if M == '12':
-        return str(int(Y) + 1) + '-01'
-    return Y + str(int(M) + 1)
+        return '%i-01' % (int(Y) + 1)
+    return '%s-%02i' % (Y, int(M) + 1)
 
 def build_window(start_date, t_suffix='-01T00:00:00.000Z'):
+    """Defines the gap search window based on the start date."""
     return (start_date + t_suffix,
             get_end_date(start_date) + t_suffix)
 
-def tPrint(t, tp_fmt='%Y-%m-%dT%H:%M:%SZ'):
+def tPrint(t, tp_fmt='%Y-%m-%dT%H:%M:%S.000Z'):
     if type(t) is not datetime:
         t = tConv(t)
     return t.strftime(tp_fmt)
 
-def find_gaps(rd, twind):
+def find_gaps(rd, window_start):
     """Find gaps for a single refdes and time window. Returns list of tuples 
     containing gap start and end times [(start, end), ...]"""
-    print('find_gaps() not yet implemented')
-    return []
+    gaps = []
+    SERVER = 'prod' # hard coded to search for gaps on production server
+    # Get Window Start and End Times
+    t_start, t_end = build_window(window_start)
+    
+    # Get Instrument Data and Metadata
+    inst = InstDataObj(rd)
+    inst.build_url(t_start, t_end, SERVER, DEBUG=False)
+    metadata = inst.get_metadata_times(SERVER)[0]
+    
+    # Run Data Check & Plot if data come back
+    if t_end < metadata['beginTime'] or t_start > metadata['endTime']:
+        print('Given time range is outside data bounds - SKIPPING!')
+    elif inst.get_data(SERVER):
+        # Convert Time Data to Datetime Format
+        t_i = tConv(inst.t[0])
+        t_f = tConv(inst.t[-1])
+        if t_start < metadata['beginTime']:
+            dt_start = datetime.strptime(metadata['beginTime'], t_fmt)
+        else:
+            dt_start = datetime.strptime(t_start, t_fmt)
+        if t_end > metadata['endTime']:
+            dt_end = datetime.strptime(metadata['endTime'], t_fmt)
+        else:
+            dt_end = datetime.strptime(t_end, t_fmt)
+            
+         # Bulk Start/End Checks
+        bad_start, bad_end = False, False
+        if t_i >= dt_start + dt_cuttoff:
+            bad_start = True
+        if t_f <= dt_end - dt_cuttoff:
+            bad_end = True
+    
+        # Take Gradient and Find Bad Points
+        tgrad = np.gradient(inst.t)
+        tbad = inst.t[tgrad >= cutoff_frac]
+        tgradbad = tgrad[tgrad >= cutoff_frac]
+    
+        # Open file if gaps
+        if bad_start or bad_end or len(tbad) > 0:        
+            # Handle Delayed Start and Early End Plotting & Logging
+            if bad_start:
+                gaps.append((tPrint(dt_start), tPrint(t_i)))
+            if bad_end:
+                gaps.append((tPrint(t_f), tPrint(dt_end)))
+                
+            # Handle Mid-Secion Gaps
+            if len(tbad) > 0:
+                for j in range(len(tbad)-1):
+                    gaps.append((tPrint(tbad[j]), tPrint(tbad[j+1])))
+    # No data returned
+    else:
+        gaps.append(('', ''))
+    return gaps
 
 
 def build_gap_list(cabled_refdes, time_windows):
@@ -266,6 +320,8 @@ if cli_args['pbflag']:
 msg += '.'
 
 print(msg)
+
+gap_list.dump()
 
                 
                 

@@ -1,5 +1,9 @@
 # Release Notes
 
+## Version 3.3.0
+* Added functionality to detect gaps in `rsn_gaps.py` which is built off the rest of the package.
+* Multiple bug fixes.
+
 ## Version 3.2.4
 * Bug fixes and a job list print function.
 
