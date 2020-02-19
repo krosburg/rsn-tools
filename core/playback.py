@@ -312,6 +312,8 @@ class gapListObj(object):
             gapList[rd] = this_item
         if filename is None:
             print(json.dumps(gapList, indent=4))
+        elif filename is 'JSON':
+            return gapList
         else:
             with open(filename, 'w+') as f:
                 f.write(json.dumps(gapList, indent=3))
@@ -325,6 +327,10 @@ class gapListObj(object):
                     if print:
                         print('%s, %s' % (rd, gap.job))
         return job_list
+    
+    
+def gaplist_from_file(filename):
+    """Reads a gaplist from file. File should be in JSON format."""
             
 
 def get_filerange(data_range):

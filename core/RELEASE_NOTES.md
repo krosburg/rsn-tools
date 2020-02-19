@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.3.1
+* Modified `core.playback.gapListObj.dump()` routine to return JSON element when given `filename='JSON'` as an argument.
+
 ## Version 3.3.0
 * Added functionality to detect gaps in `rsn_gaps.py` which is built off the rest of the package.
 * Multiple bug fixes.
