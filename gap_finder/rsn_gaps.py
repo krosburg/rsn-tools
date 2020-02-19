@@ -36,6 +36,8 @@ def print_help():
     print('                          be used with -r, -t, -a, --refes, --times, or --all.\n')
     print('  --file=help           - Displays file specific help w/ format and usage info.\n')
     print('  -h,--help             - Display this help message. Must be only argument.\n')
+    print('  --log-path=<path>     - Sets the path to write log file (path only, filename is set auto-')
+    print('                          matically; e.g: "/home/logs/"). If not set, uses current directory.\n')
     print('  -r <rd1> <rd2>...     - Allows specification of reference designators to be used. -r is')
     print('                          followed by any number of reference designators separated by spaces.\n')
     print('  --refdes=<rd1>,<rd2>  - Same as -r, but reference designators are supplied in a comma separ-')
@@ -111,6 +113,7 @@ def get_args():
     from_file = False
     want_playback = True
     server = 'dev03'
+    logpath = '.'
     # Handle no arguments case
     if nargs < 1:
         print('Improper syntax!\n', file=sys.stderr)
@@ -155,8 +158,11 @@ def get_args():
         elif arg == '-s': 
             server, ii = nextItem(sys.argv, ii)
             arg, ii = nextItem(sys.argv, ii)
-        elif arg == '--server':
+        elif arg.startswith('--server'):
             server = arg.split('=')[-1]
+            arg, ii = nextItem(sys.argv, ii)
+        elif arg.startswith('--log-path'):
+            logpath = arg.split('=')[-1]
             arg, ii = nextItem(sys.argv, ii)
         # Ignore other arguments
         else:
@@ -178,6 +184,7 @@ def get_args():
     return {'refdes': cabled_refdes,
             'times': time_windows,
             'pbflag': want_playback,
+            'logpath': logpath,
             'server': server}
     
     
@@ -188,6 +195,8 @@ cutoff_frac = cutoff_hours/24.0
 dt_cuttoff = timedelta(hours=cutoff_hours)
 t_fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
 t_suffix = '-01T00:00:00.000Z'
+run_date = datetime.utcnow()
+logfile = 'rsn_gaplist_' + run_date.strftime('%Y-%m-%dT%H_%MZ') + '.log'
                 
                 
 
@@ -321,9 +330,33 @@ msg += '.'
 
 print(msg)
 
-gap_list.dump()
+#gap_list.dump()
 
-                
+
+# Build Log Structure
+log_dump = {'gap_list': gap_list.dump('JSON'),
+            'run_info':
+                {'run_date': run_date.isoformat(),
+                 'command': ' '.join(sys.argv),
+                 'refdes': cli_args['refdes'],
+                 'times': cli_args['times']}
+            }
+
+
+# Dump Gaplist to File
+print(logfile)
+import json
+
+logfile = '/'.join([cli_args['logpath'], logfile])
+cnt = 0
+fh = None
+while fh is None:
+    try:
+        fh = open(logfile, 'w+')
+    except:
+        logfile += '.' + str(cnt)
+fh.write(json.dumps(log_dump, indent=2))
+fh.close()
                 
                 
                 
