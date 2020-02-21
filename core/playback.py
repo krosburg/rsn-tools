@@ -263,9 +263,12 @@ class gapObj(object):
         
 class gapListObj(object):
     """Data structure (dictionary) that holds gapObjs tied to a refdes."""
-    def __init__(self):
+    def __init__(self, rundate=None):
         self.data = {}
-        self.run_date = datetime.utcnow()
+        if rundate is None:
+            self.run_date = datetime.utcnow()
+        else:
+            self.run_date = rundate
         self.updated = datetime.utcnow()
         
     def add(self, refdes, t_start, t_end, jobID=None):
@@ -328,9 +331,20 @@ class gapListObj(object):
                         print('%s, %s' % (rd, gap.job))
         return job_list
     
-    
+#TODO: Test this!    
 def gaplist_from_file(filename):
     """Reads a gaplist from file. File should be in JSON format."""
+    with open(filename, 'r') as fh:
+        data = json.load(fh)
+    gaplist = gapListObj(datetime.strptime(data['run_info']['run_date'], '%Y-%m-%dT%H:%M:%S.%f'))
+    for rd in data['gap_list']:
+        for gap in data['gap_list'][rd]:
+            # Add Each Entry to gaplist
+            gaplist.add(gap['refdes'], gap['start'], gap['end'], gap['job'])
+            # If job ID, then update test status and prod status
+            if gap['job'] is not None:
+                gaplist.update(gap['refdes'], gap['job'], gap['test'], gap['prod'])
+    return gaplist
             
 
 def get_filerange(data_range):

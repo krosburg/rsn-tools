@@ -5,7 +5,7 @@ Created on Fri Jan  3 12:08:51 2020
 @author: Kellen
 """
 # == IMPORTS ================================================================ #
-import sys
+import sys, json
 sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from core.engine import InstDataObj
 from core.streams import rdList
@@ -288,6 +288,29 @@ def build_gap_list(cabled_refdes, time_windows):
     return gap_list
 
 
+def dump_log_file(logpath, logfile):
+    outfile = '/'.join([cli_args['logpath'], logfile])
+    cnt = 0
+    fh = None
+    # Create File Handle / Open For Writing
+    while fh is None:
+        try:
+            fh = open(outfile, 'w+')
+        except:
+            outfile += '.' + str(cnt)
+        if cnt > 5:
+            raise('ERROR: Could not create log file!')
+    # Write to Log and Close File
+    fh.write(json.dumps({'gap_list': gap_list.dump('JSON'),
+                         'run_info':
+                             {'run_date': run_date.isoformat(),
+                              'command': ' '.join(sys.argv),
+                              'refdes': cli_args['refdes'],
+                              'times': cli_args['times']}
+                             },
+                             indent=2))
+    fh.close()
+
 
 # == Main Program =========================================================== #
 # Get CLI Arguments or Quit
@@ -310,53 +333,14 @@ if cli_args['server'] == 'prod':
 # Create the list of gaps
 gap_list = build_gap_list(cli_args['refdes'], cli_args['times'])
 
-msg = '\n\nrsn_gaps.py will run on reference designators'
-if cli_args['refdes'] is None and cli_args['times'] is None:
-    msg += ' read from the specified file,\n'
-else:
-    msg += ':\n' + '\n'.join(cli_args['refdes']) + '.\n'
-msg += 'using times'
-if cli_args['refdes'] is None and cli_args['times'] is None:
-    msg += ' read from the specified file.\n'
-else:
-    msg += ':\n' + '\n'.join(cli_args['times']) + '.\n'
-msg += 'Gaps will'
-if not cli_args['pbflag']:
-    msg += ' not'
-msg += ' be played back'
-if cli_args['pbflag']:
-    msg += ' on ' + cli_args['server']
-msg += '.'
-
-print(msg)
-
-#gap_list.dump()
+# Dump to Log
+dump_log_file(cli_args['logpath'], logfile)
 
 
-# Build Log Structure
-log_dump = {'gap_list': gap_list.dump('JSON'),
-            'run_info':
-                {'run_date': run_date.isoformat(),
-                 'command': ' '.join(sys.argv),
-                 'refdes': cli_args['refdes'],
-                 'times': cli_args['times']}
-            }
 
 
-# Dump Gaplist to File
-print(logfile)
-import json
 
-logfile = '/'.join([cli_args['logpath'], logfile])
-cnt = 0
-fh = None
-while fh is None:
-    try:
-        fh = open(logfile, 'w+')
-    except:
-        logfile += '.' + str(cnt)
-fh.write(json.dumps(log_dump, indent=2))
-fh.close()
+
                 
                 
                 
