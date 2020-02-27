@@ -14,24 +14,24 @@ import core.ooicreds
 # == HELPER FUNCTIONS ======================================================= #
 def getCreds(srv):
     """ Get credentials based on server specification """
-    if srv is "prod":
+    if srv == "prod":
         return core.ooicreds.PROD_CREDENTIALS
-    elif srv is "dev01" or srv is "pre-prod":
+    elif srv == "dev01" or srv == "pre-prod":
         return core.ooicreds.DEV01_CREDENTIALS
-    elif srv is "dev03" or srv is "test":
+    elif srv == "dev03" or srv == "test":
         return core.ooicreds.DEV03_CREDENTIALS
     else:
         raise Exception("Credentials not configured for " + srv + ". Abort!")
         
 
 def setBaseURL(srv):
-     if srv is "prod":
-         return 'https://ooinet.oceanobservatories.org'
-     elif srv is "dev01" or srv is "pre-prod":
+    if srv == "prod":
+        return 'https://ooinet.oceanobservatories.org'
+    elif srv == "dev01" or srv == "pre-prod":
         return 'https://ooinet-dev-01.oceanobservatories.org'
-     elif srv is "dev03" or srv is "test":
-         return 'https://ooinet-dev-03.oceanobservatories.org'
-     else:
+    elif srv == "dev03" or srv == "test":
+        return 'https://ooinet-dev-03.oceanobservatories.org'
+    else:
         raise Exception("BASEURL not configured for " + srv + ". Abort!")
 
 

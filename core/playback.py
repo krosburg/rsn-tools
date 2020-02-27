@@ -374,7 +374,7 @@ def run_playback(server, refdes, data_range=None, force=False, DEBUG=False):
 def preview_playback(server, refdes, data_range=None, force=False, DEBUG=False):
     # Create M2M Object
     m2m = MachineToMachine(server)
-    m2m.context()
+    print(m2m.context())
     filemasks = create_filemasks(refdes)
     request = cabledRequestFactory(m2m.username, refdes, filemasks,
                                    file_range=get_filerange(data_range), 
