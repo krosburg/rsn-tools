@@ -9,7 +9,7 @@ import sys, json
 sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from core.engine import InstDataObj
 from core.streams import rdList
-from core.playback import gapListObj
+from core.playback import gapListObj, bulk_playback, gaplist_from_file
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 import numpy as np
@@ -42,6 +42,10 @@ def print_help():
     print('                          followed by any number of reference designators separated by spaces.\n')
     print('  --refdes=<rd1>,<rd2>  - Same as -r, but reference designators are supplied in a comma separ-')
     print('                          ated list with no spaces.\n')
+    print('  --resume=<gapfile>    - Starts playback from a gapfile. The gapfile must be a file dumped in')
+    print('                          gap_list format by this program. This option will automatically kick')
+    print('                          off playback for all gaps in the log on dev03, unless the server')
+    print('                          is defined with the -s or --server= flags.\n')
     print('  -s <dev03|dev01|prod> - Specifies playback server. If ommitted, dev03 is used by default. Ig-')
     print('                          nored if -c or --check-only is used.\n')
     print('  --server=<server>     - Same as -s.\n')
@@ -112,8 +116,10 @@ def get_args():
     allRD = False
     from_file = False
     want_playback = True
+    want_gaps = True
     server = 'dev03'
     logpath = '.'
+    gapfile = None
     # Handle no arguments case
     if nargs < 1:
         print('Improper syntax!\n', file=sys.stderr)
@@ -134,25 +140,29 @@ def get_args():
         cabled_refdes, time_windows = read_arg_file(sys.argv[1].split('=')[-1])
         from_file = True
         ii = 2
+    if sys.argv[1].startswith('--resume='):
+        gapfile = sys.argv[1].split('=')[-1]
+        want_gaps = False
+        ii = 2
     # Handle remaining arguments
     while ii < len(sys.argv):
         arg = sys.argv[ii]
         # Handle Refdes as "-r refdes refdes"
-        if arg == '-r' and not allRD and not from_file:
+        if arg == '-r' and not allRD and not from_file and want_gaps:
             ii, cabled_refdes = get_args_helper(ii)
         # Handle time windows as "-t time time"
-        elif arg == '-t' and not from_file:
+        elif arg == '-t' and not from_file and want_gaps:
             ii, time_windows = get_args_helper(ii)
         # Handle Refdes as "--refdes=rd,rd,rd"
-        elif arg.startswith('--refdes=') and not allRD and not from_file:
+        elif arg.startswith('--refdes=') and not allRD and not from_file and want_gaps:
             cabled_refdes = arg.split('=')[-1].split(',')
             arg, ii = nextItem(sys.argv, ii)
         # Handle Time Windows as "--times=time,time"
-        elif arg.startswith('--times=') and not from_file:
+        elif arg.startswith('--times=') and not from_file and want_gaps:
             time_windows = arg.split('=')[-1].split(',')
             arg, ii = nextItem(sys.argv, ii)
         # Get the Check Only "-c" or "--check-only" argument
-        elif arg == '-c' or arg == '--check-only':
+        elif arg == '-c' or arg == '--check-only' and want_gaps:
             want_playback = False
             arg, ii = nextItem(sys.argv, ii)
         elif arg == '-s': 
@@ -161,7 +171,7 @@ def get_args():
         elif arg.startswith('--server'):
             server = arg.split('=')[-1]
             arg, ii = nextItem(sys.argv, ii)
-        elif arg.startswith('--log-path'):
+        elif arg.startswith('--log-path='):
             logpath = arg.split('=')[-1]
             arg, ii = nextItem(sys.argv, ii)
         # Ignore other arguments
@@ -171,10 +181,10 @@ def get_args():
             arg, ii = nextItem(sys.argv, ii)
     # Error Checking
     if not from_file:
-        if len(cabled_refdes) == 0:
+        if len(cabled_refdes) == 0 and gapfile is None:
             print('Invalid syntax: no reference designators specified.', file=sys.stderr)
             return None
-        if len(time_windows) == 0:
+        if len(time_windows) == 0 and gapfile is None:
             print('Invalid syntax: no time windows specified.', file=sys.stderr)
             return None
         if want_playback and server not in ['prod', 'test', 'dev01', 'dev03']:
@@ -184,7 +194,9 @@ def get_args():
     return {'refdes': cabled_refdes,
             'times': time_windows,
             'pbflag': want_playback,
+            'gapflag': want_gaps,
             'logpath': logpath,
+            'gapfile': gapfile,
             'server': server}
     
     
@@ -331,7 +343,14 @@ if cli_args['server'] == 'prod':
     
     
 # Create the list of gaps
-gap_list = build_gap_list(cli_args['refdes'], cli_args['times'])
+if cli_args['gapflag']:
+    gap_list = build_gap_list(cli_args['refdes'], cli_args['times'])
+elif cli_args['gapfile'] is not None and cli_args['pbflag']:
+    gap_list = gaplist_from_file(cli_args['gapfile'])
+
+# Add playback bit here
+if cli_args['pbflag']:
+    bulk_playback(cli_args['server'], gap_list, preview_only=False, force=False, DEBUG=False)
 
 # Dump to Log
 dump_log_file(cli_args['logpath'], logfile)
