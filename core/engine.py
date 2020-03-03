@@ -218,3 +218,4 @@ class InstDataObj(object):
                 plt.text(0, -0.02, 'No Data Returned from M2M Query',
                          ha='center', va='center', size=20, color='black')
                 plt.title(self.ref_des + ' ' + self.pnames[0])
+        plt.show()
