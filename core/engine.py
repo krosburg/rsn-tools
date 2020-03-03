@@ -19,11 +19,11 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def getCreds(srv):
     """ Get credentials based on server specification """
-    if srv is "prod":
+    if srv == "prod":
         return PROD_CREDENTIALS
-    elif srv is "dev01" or srv is "pre-prod":
+    elif srv == "dev01" or srv == "pre-prod":
         return DEV01_CREDENTIALS
-    elif srv is "dev03" or srv is "test":
+    elif srv == "dev03" or srv == "test":
         return DEV03_CREDENTIALS
     else:
         raise Exception("Credentials not configured for " + srv + ". Abort!")
@@ -34,11 +34,11 @@ def getBaseURL(srv, use_endpoint=True):
         If use_endpoint is False, just the main domain URL will be used."""
     ENDPOINT = 'api/m2m/12576/sensor/inv/'
     # Define main domain URL based on server designation (or quit w/ error)
-    if srv is "prod":
+    if srv == "prod":
         url = 'https://ooinet.oceanobservatories.org/'
-    elif srv is "dev01" or srv is "pre-prod":
+    elif srv == "dev01" or srv == "pre-prod":
         url = 'https://ooinet-dev-01.oceanobservatories.org/'
-    elif srv is "dev03" or srv is "test":
+    elif srv == "dev03" or srv == "test":
         url = 'https://ooinet-dev-03.oceanobservatories.org/'
     else:
         raise Exception("BASE_URL not configured for " + srv + ". Abort!")
