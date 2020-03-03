@@ -1,5 +1,12 @@
 # Release Notes
 
+## Version 3.4.0
+* Modified filemask creation to use raw CTD files for DOSTA playback instead of port agent datalogs.
+
+## Version 3.3.3
+* Added playback request preview option to CLI.
+* Fixed a bug that prevented update of job numbers when resuming playback from file on a different server.
+
 ## Version 3.3.2
 * Added reading of gaplist from a file to `playback.py`.
 * Minor improvements to `rsn_gaps.py`.

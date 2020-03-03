@@ -34,7 +34,7 @@ def useErr():
 SERVER = 'prod'
 
 # Cutoff and Time Vairables
-cutoff_hours = 24
+cutoff_hours = 6
 cutoff_frac = cutoff_hours/24.0
 dt_cuttoff = timedelta(hours=cutoff_hours)
 t_fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -70,6 +70,11 @@ else:
 # Instantiate Instrument Object
 inst = InstDataObj(rd)
 inst.build_url(t_start, t_end, SERVER, DEBUG=False)
+
+# t_start,t_end are the time window start and ends
+# t_i, t_f are the dataset start & end times
+
+
 
 # Get Metadata/Times Bounds & Check 
 metadata = inst.get_metadata_times(SERVER)

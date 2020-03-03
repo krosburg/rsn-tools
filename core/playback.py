@@ -65,15 +65,23 @@ parser_drivers = {
 remapped_sensors = {
     'D1000A301': 'RASFLA301_D1000',
     'VADCPA101': ['VADCPA101MAIN', 'VADCPA101-5TH'],
-    'VADCPA301': ['VADCPA301MAIN', 'VADCPA301-5TH']
+    'VADCPA301': ['VADCPA301MAIN', 'VADCPA301-5TH'],
+    'DOSTAD106': 'CTDBPN106',
+    'DOSTAD108': 'CTDBPO108',
+    'DOSTAD103': 'CTDPFA103',
+    'DOSTAD109': 'CTDPFA109',
+    'DOSTAD303': 'CTDPFA303',
+    'DOSTAD101': 'CTDPFB101',
+    'DOSTAD301': 'CTDPFB301',
 }
 
 # Define Filemask paths
 # 1. Pior to 2017-08-10, files are stored in the top level directory
 # 2. At this time, DOSTA can only be replayed using PA datalogs
+# 3. Currently testing playback of DOSTA from CTD raw datalogs.
 filemask_glob_old = '/rsn_cabled/rsn_data/DVT_Data/{node}/{sensor}*.dat'
 filemask_glob_new = '/rsn_cabled/rsn_data/DVT_Data/{node}/{sensor}/*/*/{sensor}*_UTC.dat'
-filemask_glob_dosta = '/san_data/ARCHIVE/{refdes}/*/*/{refdes}.datalog.*'
+#filemask_glob_dosta = '/san_data/ARCHIVE/{refdes}/*/*/{refdes}.datalog.*'
 
 # Map Science Stream Name To Instrument
 science_streams = {
@@ -145,10 +153,10 @@ def create_filemasks(refdes):
         sensor = [sensor]
     # print(sensor)
     for s in sensor:
-        if 'DOSTA' in s:
-            filemasks.append(filemask_glob_dosta.format(refdes=refdes))
-        else:
-            filemasks.append(filemask_glob_new.format(node=node.lower(), sensor=s))
+        #if 'DOSTA' in s:
+        #    filemasks.append(filemask_glob_dosta.format(refdes=refdes))
+        #else:
+        filemasks.append(filemask_glob_new.format(node=node.lower(), sensor=s))
     return filemasks
 
 
@@ -401,7 +409,7 @@ def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
                     if 'dev' in server or 'test' in server or 'pre' in server:
                         gap.update(response.json()['id'], test_status='PENDING')
                     else:
-                        gap.update(response.json()['id'], prod_status='PENDING')
+                        gap.update(gap.job, test_status='COMPLETE', prod_status='PENDING', newID=response.json()['id'])
                 else:
                     print('no response for playback request of %s' % refdes)
     
