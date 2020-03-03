@@ -271,13 +271,14 @@ class gapObj(object):
         
 class gapListObj(object):
     """Data structure (dictionary) that holds gapObjs tied to a refdes."""
-    def __init__(self, rundate=None):
+    def __init__(self, server, rundate=None):
         self.data = {}
         if rundate is None:
             self.run_date = datetime.utcnow()
         else:
             self.run_date = rundate
         self.updated = datetime.utcnow()
+        self.server = server
         
     def add(self, refdes, t_start, t_end, jobID=None):
         """ Adds a new gapObj to the gap list, if refdes not present, adds."""
@@ -338,13 +339,23 @@ class gapListObj(object):
                     if print:
                         print('%s, %s' % (rd, gap.job))
         return job_list
+
     
-#TODO: Test this!    
+    def status(self):
+        for rd in self.data:
+            for gap in self.data[rd]:
+                if gap.job is not None:
+                    print('%s (%s):\n   ' % (rd, self.server), end='')
+                    view_status(gap.job, self.server)
+                    
+    
+
 def gaplist_from_file(filename):
     """Reads a gaplist from file. File should be in JSON format."""
     with open(filename, 'r') as fh:
         data = json.load(fh)
-    gaplist = gapListObj(datetime.strptime(data['run_info']['run_date'], '%Y-%m-%dT%H:%M:%S.%f'))
+    gaplist = gapListObj(data['run_info']['server'],
+                         datetime.strptime(data['run_info']['run_date'], '%Y-%m-%dT%H:%M:%S.%f'))
     for rd in data['gap_list']:
         for gap in data['gap_list'][rd]:
             # Add Each Entry to gaplist
@@ -353,6 +364,13 @@ def gaplist_from_file(filename):
             if gap['job'] is not None:
                 gaplist.update(gap['refdes'], gap['job'], gap['test'], gap['prod'])
     return gaplist
+
+
+def server_from_file(filename):
+    """Returns playback server of last run from a gap log file."""
+    with open(filename, 'r') as fh:
+        data = json.load(fh)
+    return data['run_info']['server']
             
 
 def get_filerange(data_range):
@@ -414,7 +432,6 @@ def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
                     print('no response for playback request of %s' % refdes)
     
     
-    
 def view_status(job_list, server):
     m2m = MachineToMachine(server)
     if type(job_list) != list:
@@ -432,3 +449,4 @@ def view_status(job_list, server):
             if status in [u'ERROR', u'WARNING']:
                 print(x['status'], x['filePath'])
         print(job, counts)
+        
