@@ -425,9 +425,9 @@ def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
                     # Display response and update job id field of each gap
                     print(refdes, response.json())
                     if 'dev' in server or 'test' in server or 'pre' in server:
-                        gap.update(response.json()['id'], test_status='PENDING')
+                        gap.update(response.json()['id'], test_status='PENDING', force=True)
                     else:
-                        gap.update(gap.job, test_status='COMPLETE', prod_status='PENDING', newID=response.json()['id'])
+                        gap.update(response.json()['id'], test_status='COMPLETE', prod_status='PENDING', force=True)
                 else:
                     print('no response for playback request of %s' % refdes)
     
