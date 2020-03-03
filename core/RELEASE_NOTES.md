@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.4.2
+* Added data check program to generate verification plots from gap log file.
+
 ## Version 3.4.1
 * Added status check program to check status based on gap log file.
 
