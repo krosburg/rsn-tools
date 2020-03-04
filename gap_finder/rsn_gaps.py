@@ -35,9 +35,12 @@ def print_help():
     print('  --file=<filename>     - Same as -f, but different syntax. Must be first argument. Cannot')
     print('                          be used with -r, -t, -a, --refes, --times, or --all.\n')
     print('  --file=help           - Displays file specific help w/ format and usage info.\n')
+    print('  --force               - Sets checkExistingFiles to False to force playback of datalogs.\n')
     print('  -h,--help             - Display this help message. Must be only argument.\n')
+    print('  --no-log              - Disables writing of gap log file for testing, etc.\n')
     print('  --log-path=<path>     - Sets the path to write log file (path only, filename is set auto-')
     print('                          matically; e.g: "/home/logs/"). If not set, uses current directory.\n')
+    print('  --preview             - Displays preview playback requests without submitting them.\n')
     print('  -r <rd1> <rd2>...     - Allows specification of reference designators to be used. -r is')
     print('                          followed by any number of reference designators separated by spaces.\n')
     print('  --refdes=<rd1>,<rd2>  - Same as -r, but reference designators are supplied in a comma separ-')
@@ -120,6 +123,9 @@ def get_args():
     server = 'dev03'
     logpath = '.'
     gapfile = None
+    preview_only = False
+    logging = True
+    force = False
     # Handle no arguments case
     if nargs < 1:
         print('Improper syntax!\n', file=sys.stderr)
@@ -174,6 +180,15 @@ def get_args():
         elif arg.startswith('--log-path='):
             logpath = arg.split('=')[-1]
             arg, ii = nextItem(sys.argv, ii)
+        elif arg == '--preview':
+            preview_only = True
+            arg, ii = nextItem(sys.argv, ii)
+        elif arg == '--force' and want_playback:
+            force = True
+            arg, ii = nextItem(sys.argv, ii)
+        elif arg == '--no-log':
+            logging = False
+            arg, ii = nextItem(sys.argv, ii)
         # Ignore other arguments
         else:
             if arg not in ['-f', '-h', '-c', '-a', '--file', '--help', '--all', '--check-only']:
@@ -197,12 +212,15 @@ def get_args():
             'gapflag': want_gaps,
             'logpath': logpath,
             'gapfile': gapfile,
-            'server': server}
+            'server': server,
+            'preview': preview_only,
+            'logging': logging,
+            'force': force}
     
     
 # == VARIABLES FOR MAIN PROGRAM ============================================= #
 # Cutoff and Time Vairables
-cutoff_hours = 24
+cutoff_hours = 6
 cutoff_frac = cutoff_hours/24.0
 dt_cuttoff = timedelta(hours=cutoff_hours)
 t_fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -292,7 +310,7 @@ def find_gaps(rd, window_start):
 
 
 def build_gap_list(cabled_refdes, time_windows):
-    gap_list = gapListObj()
+    gap_list = gapListObj(server=cli_args['server'])
     for refdes in cabled_refdes:
         for window in time_windows:
             for gap in find_gaps(refdes, window):
@@ -318,7 +336,8 @@ def dump_log_file(logpath, logfile):
                              {'run_date': run_date.isoformat(),
                               'command': ' '.join(sys.argv),
                               'refdes': cli_args['refdes'],
-                              'times': cli_args['times']}
+                              'times': cli_args['times'],
+                              'server': cli_args['server']}
                              },
                              indent=2))
     fh.close()
@@ -344,16 +363,34 @@ if cli_args['server'] == 'prod':
     
 # Create the list of gaps
 if cli_args['gapflag']:
+    print('Building gaps from scratch')
+    # Check Refdes for Accuracy
+    for refdes in cli_args['refdes']:
+        if refdes not in rdList:
+            raise('ERROR: Invalid reference desigantor. Check your input! Aborting.')
     gap_list = build_gap_list(cli_args['refdes'], cli_args['times'])
 elif cli_args['gapfile'] is not None and cli_args['pbflag']:
+    print('Loading gaps from file')
     gap_list = gaplist_from_file(cli_args['gapfile'])
 
 # Add playback bit here
 if cli_args['pbflag']:
-    bulk_playback(cli_args['server'], gap_list, preview_only=False, force=False, DEBUG=False)
+    print('Playing back!')
+    gap_list.dump()
+    bulk_playback(cli_args['server'], gap_list, preview_only=cli_args['preview'], force=cli_args['force'], DEBUG=False)
 
 # Dump to Log
-dump_log_file(cli_args['logpath'], logfile)
+if not cli_args['preview'] and cli_args['logging']:
+    if cli_args['gapfile'] is not None:
+        print('Updating logfile: ' + cli_args['gapfile'])
+        dump_log_file('', cli_args['gapfile'])
+    else:
+        print('Writing logfile: ' + '/'.join([cli_args['logpath'], logfile]))
+        dump_log_file(cli_args['logpath'], logfile)
+elif cli_args['preview']:
+    print('WARNING: preview mode enabled. Bypassing logfile dump.')
+elif not cli_args['logging']:
+    print('WARNING: Logging disabled. Bypassing logfile dump.')
 
 
 

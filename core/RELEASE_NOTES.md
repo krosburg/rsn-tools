@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.4.3
+* Added `--no-log` option to `rsn_gaps` to avoid logging for one-time playbacks, etc.
+
 ## Version 3.4.2
 * Added data check program to generate verification plots from gap log file.
 
