@@ -9,6 +9,7 @@ __pycache__/
 # User Defined Files
 ooicreds.py
 ooicreds.pyc
+test_playback.py
 playback_check/ooicreds.py
 playback_check/ooicreds.pyc
 
