@@ -109,7 +109,7 @@ If the job hasn't started or no files were found to play back, you'll see:
 RS03AXPS-PC03A-4A-DOSTAD303 (dev03):
    907 {}
 ```
-If hte job has started, you'll see:
+If the job has started, you'll see:
 ```
 RS03AXPS-PC03A-4A-DOSTAD303 (dev03):
    907 {'PENDING': 1}
@@ -268,3 +268,47 @@ Gap check time windows are in the format of "YYYY-MM" - a four digit year follow
 * `python rsn_gaps.py -r CE04OSBP-LJ01C-05-ADCPSI103 --times=2019-12,2020-01,2020-02`
 
 
+## status_check.py - Main Program
+
+### Description
+`status_check.py` reads in a gap log file and checks Ingest Engine for the status of each jobID. The gap log file contains information on the last server used for playback, and this is used by `status_check.py` to determine which server to check for playback statuses.
+
+### Typical Use Case
+The only use case is to use `status_check.py` to check the status of playbacks started by `rsn_gaps.py`. Here's how:
+```bash
+[user@test]: cd /path/to/rsn_tools/gap_finder/
+[user@test]: python status_check.py rsn_gaplist_2020-03-03T19_52Z.log
+```
+The following are typical responses from the status checkt tool.
+
+If the job hasn't started or no files were found to play back, you'll see:
+```
+RS03AXPS-PC03A-4A-DOSTAD303 (dev03):
+   907 {}
+```
+If the job has started, you'll see:
+```
+RS03AXPS-PC03A-4A-DOSTAD303 (dev03):
+   907 {'PENDING': 1}
+```
+meaning one file was found and is pending playback. Then
+```
+RS03AXPS-PC03A-4A-DOSTAD303 (dev03):
+   907 {'QUEUED': 1}
+```
+meaning that file has been queued and is awaiting playback. Sometimes with a larger number of files you'll see a `SENT` field, which means those files have been sent from the queue to the playback engine. Finally, you'll see:
+```
+RS03AXPS-PC03A-4A-DOSTAD303 (dev03):
+   907 {'COMPLETE': 1}
+```
+There can be any combination of these as well, for example:
+```
+RS03AXPS-PC03A-4A-DOSTAD303 (dev03):
+   907 {'QUEUED': 5, 'SENT': 12', COMPLETE': 9, 'PENDING': 10}
+```
+
+### Other Options
+At present, there are no additional options for the status check tool.
+
+### The Future and Beyond
+In the future, this will be modified to check for a fully completed status. If found, the gap log file will updated to say that the playback is complete.
