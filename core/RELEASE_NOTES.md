@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 3.4.4
+* Fixed a bug in `rsn_gaps.py` where the file help fails to quit.
+
 ## Version 3.4.3
 * Added `--no-log` option to `rsn_gaps` to avoid logging for one-time playbacks, etc.
 
