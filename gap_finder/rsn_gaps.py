@@ -69,6 +69,7 @@ def print_file_help():
     print('   [times]')
     print('   <YYYY-MM>')
     print('   <YYYY-MM>\n')
+    quit()
 
 
 def read_arg_file(filename):
@@ -220,7 +221,7 @@ def get_args():
     
 # == VARIABLES FOR MAIN PROGRAM ============================================= #
 # Cutoff and Time Vairables
-cutoff_hours = 6
+cutoff_hours = 24
 cutoff_frac = cutoff_hours/24.0
 dt_cuttoff = timedelta(hours=cutoff_hours)
 t_fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
