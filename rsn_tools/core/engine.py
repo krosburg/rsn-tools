@@ -6,8 +6,8 @@ Created on Thu Sep 26 14:12:23 2019
 """
 
 from datetime import datetime, timedelta
-from core.streams import rdList
-from core.ooicreds import PROD_CREDENTIALS, DEV01_CREDENTIALS, DEV03_CREDENTIALS
+from rsn_tools.core.streams import rdList
+from rsn_tools.core.ooicreds import PROD_CREDENTIALS, DEV01_CREDENTIALS, DEV03_CREDENTIALS
 from requests.exceptions import Timeout
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates

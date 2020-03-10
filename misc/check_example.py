@@ -30,13 +30,17 @@ IMPORTANT NOTE: MUST BE RUN FROM BASE DIRECTORY!
 
 #foobar = __import__("core.engine")
 from core.engine import InstDataObj
+import json
 #from foobar import InstDataObj
 
 # USER VARIABLES
 SERVER = 'prod'
-#SERVER = 'dev03'
-t_start = '2014-08-02T00:00:00.000Z'
-t_end = '2018-07-17T23:59:59.999Z'
+#SERVER = 'dev01'
+SERVER = 'dev03'
+t_start = '2020-03-06T20:00:00.000Z'
+t_end = '2020-03-06T23:59:59.999Z'
+#t_start = '2015-11-05T00:00:00.000Z'
+#t_end = '2016-02-15T00:00:00.000Z'
 
 # =============================================================================
 # inst = InstDataObj('RS01SBPS-SF01A-3B-OPTAAD101')
@@ -44,13 +48,25 @@ t_end = '2018-07-17T23:59:59.999Z'
 # =============================================================================
 
 # Set Reference Designator List
-rds = ['CE04OSPS-PC01B-4D-PCO2WA105']
-  
+from core.streams import rdList
+rds = []
+
+NODE = 'PCO2WA105'
+NODE = NODE.upper()
+for rd in rdList:
+    if NODE in rd:
+        rds.append(rd)
+
 for rd in rds:
     # Instantiate Instrument Object
     inst = InstDataObj(rd)
       
     # Run Data Check & Plot
-    inst.go(t_start, t_end, SERVER)
+    inst.go(t_start, t_end, SERVER, DEBUG=True)
+    
+    #print(json.dumps(inst.get_metadata_times(SERVER, stream='all'), indent=2))
  
 # =============================================================================
+
+#import core
+#core.playback.view_status([882], SERVER)

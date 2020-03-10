@@ -7,8 +7,8 @@ Adapted from Dan Mergens' cabled playback tool
 """
 # == IMPORTS ================================================================ #
 import sys, requests, json
-sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
-import core.ooicreds
+#sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
+import rsn_tools.core.ooicreds
 
 
 # == HELPER FUNCTIONS ======================================================= #

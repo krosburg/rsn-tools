@@ -6,10 +6,10 @@ Created on Fri Jan  3 12:08:51 2020
 """
 # == IMPORTS ================================================================ #
 import sys, json
-sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
-from core.engine import InstDataObj
-from core.streams import rdList
-from core.playback import gapListObj, bulk_playback, gaplist_from_file
+#sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
+from rsn_tools.core.engine import InstDataObj
+from rsn_tools.core.streams import rdList
+from rsn_tools.core.playback import gapListObj, bulk_playback, gaplist_from_file
 from datetime import datetime, timedelta
 import matplotlib.dates as mdates
 import numpy as np
@@ -55,6 +55,7 @@ def print_help():
     print('  -t <t1> <t2>...       - Allows specification of time window starting times. Sytax same as -r.')
     print('  --times=<t1>,<t2>     - Same as -t, but time windows are supplied in a comma separated list')
     print('                          with no spaces.\n')
+    quit()
     
 
 def print_file_help():

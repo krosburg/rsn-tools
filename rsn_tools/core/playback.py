@@ -6,10 +6,10 @@ Adapted from Dan Mergens' cabled playback tool
 @author: K.C. Rosburg, UW/APL
 """
 # == IMPORRTS ===== #
-import sys, json
-sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
+import json
+#sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from datetime import datetime, timedelta
-from core.m2mlib import MachineToMachine
+from rsn_tools.core.m2mlib import MachineToMachine
 
 
 # == PLAYBACK FORMATS, DRIVERS,  ======================================================= #

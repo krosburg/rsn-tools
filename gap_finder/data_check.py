@@ -6,10 +6,9 @@ Created on Fri Jan  3 12:08:51 2020
 """
 # == IMPORTS ================================================================ #
 import sys, json
-sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
-from core.playback import gaplist_from_file
-from core.engine import InstDataObj
-from core.streams import rdList
+#sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
+from rsn_tools.core.playback import gaplist_from_file
+from rsn_tools.core.engine import InstDataObj
 
 
 # == FUNCTIONS FOR CLI INTERFACE ============================================ #

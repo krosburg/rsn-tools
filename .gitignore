@@ -12,6 +12,7 @@ ooicreds.pyc
 test_playback.py
 playback_check/ooicreds.py
 playback_check/ooicreds.pyc
+misc/
 
 # Distribution / packaging
 .Python
