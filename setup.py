@@ -1,7 +1,7 @@
 from setuptools import setup
 
 setup(name='rsn_tools',
-version='3.4.4',
+version='4.0.0',
 description='Backend Tools for RSN Data Operations',
 url='https://github.com/krosburg/rsn-tools',
 author='krosburg',
