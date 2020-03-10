@@ -7,5 +7,5 @@ url='https://github.com/krosburg/rsn-tools',
 author='krosburg',
 author_email='please.dont@email.me',
 license='MIT',
-packages=['rsn_tools','rsn_tools.core','core'],
+packages=['rsn_tools','rsn_tools.core'],
 zip_safe=False)
