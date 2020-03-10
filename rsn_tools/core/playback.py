@@ -7,7 +7,6 @@ Adapted from Dan Mergens' cabled playback tool
 """
 # == IMPORRTS ===== #
 import json
-#sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from datetime import datetime, timedelta
 from rsn_tools.core.m2mlib import MachineToMachine
 

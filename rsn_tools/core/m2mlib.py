@@ -6,8 +6,7 @@ Adapted from Dan Mergens' cabled playback tool
 @author: K.C. Rosburg, UW/APL
 """
 # == IMPORTS ================================================================ #
-import sys, requests, json
-#sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
+import requests, json
 import rsn_tools.core.ooicreds
 
 
@@ -15,11 +14,11 @@ import rsn_tools.core.ooicreds
 def getCreds(srv):
     """ Get credentials based on server specification """
     if srv == "prod":
-        return core.ooicreds.PROD_CREDENTIALS
+        return rsn_tools.core.ooicreds.PROD_CREDENTIALS
     elif srv == "dev01" or srv == "pre-prod":
-        return core.ooicreds.DEV01_CREDENTIALS
+        return rsn_tools.core.ooicreds.DEV01_CREDENTIALS
     elif srv == "dev03" or srv == "test":
-        return core.ooicreds.DEV03_CREDENTIALS
+        return rsn_tools.core.ooicreds.DEV03_CREDENTIALS
     else:
         raise Exception("Credentials not configured for " + srv + ". Abort!")
         
@@ -36,10 +35,10 @@ def setBaseURL(srv):
 
 
 def getUser(srv):
-    if core.ooicreds.OOI_USERNAME is 'username':
+    if rsn_tools.core.ooicreds.OOI_USERNAME is 'username':
         raise Exception("No username defined in OOICREDS. Abort!")
     else:
-        return core.ooicreds.OOI_USERNAME
+        return rsn_tools.core.ooicreds.OOI_USERNAME
         
 
 # == CLASS DEFINITIONS ====================================================== #

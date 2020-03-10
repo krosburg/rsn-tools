@@ -6,7 +6,6 @@ Created on Fri Jan  3 12:08:51 2020
 """
 # == IMPORTS ================================================================ #
 import sys
-#sys.path.append("C:\\Users\\Kellen\\Code\\rsn-tools")
 from rsn_tools.core.playback import gaplist_from_file
 
 

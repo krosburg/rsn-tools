@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 4.0.0
+* Directory and file restructure and addition of setup.py to be pip installable.
+
 ## Version 3.4.4
 * Fixed a bug in `rsn_gaps.py` where the file help fails to quit.
 
