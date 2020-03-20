@@ -5,7 +5,7 @@ Created on Fri Jan  3 12:08:51 2020
 @author: Kellen
 """
 # == IMPORTS ================================================================ #
-import sys, json
+import sys, json, os
 from rsn_tools.core.engine import InstDataObj
 from rsn_tools.core.streams import rdList
 from rsn_tools.core.playback import gapListObj, bulk_playback, gaplist_from_file
@@ -180,6 +180,7 @@ def get_args():
             arg, ii = nextItem(sys.argv, ii)
         elif arg.startswith('--log-path='):
             logpath = arg.split('=')[-1]
+            os.makedirs(logpath, exist_ok=True)
             arg, ii = nextItem(sys.argv, ii)
         elif arg == '--preview':
             preview_only = True
@@ -294,16 +295,20 @@ def find_gaps(rd, window_start):
     
         # Open file if gaps
         if bad_start or bad_end or len(tbad) > 0:        
-            # Handle Delayed Start and Early End Plotting & Logging
+            # Handle Delayed Start
             if bad_start:
                 gaps.append((tPrint(dt_start), tPrint(t_i)))
-            if bad_end:
-                gaps.append((tPrint(t_f), tPrint(dt_end)))
                 
             # Handle Mid-Secion Gaps
             if len(tbad) > 0:
                 for j in range(len(tbad)-1):
                     gaps.append((tPrint(tbad[j]), tPrint(tbad[j+1])))
+            
+            #  Handle Early End
+            if bad_end:
+                gaps.append((tPrint(t_f), tPrint(dt_end)))
+                
+            
     # No data returned
     else:
         gaps.append(('', ''))
@@ -373,6 +378,14 @@ if cli_args['gapflag']:
 elif cli_args['gapfile'] is not None and cli_args['pbflag']:
     print('Loading gaps from file')
     gap_list = gaplist_from_file(cli_args['gapfile'])
+
+gap_list.dump()
+print('\n======================================================================')
+print('%s,%30s,%22s' % ('Refdes', 'Gap Start', 'Gap End'))
+for rd in gap_list.data:
+    for gap in gap_list.data[rd]:
+        print('%s,%s,%s' % (gap.refdes, gap.start, gap.end) )
+print('======================================================================\n')
 
 # Add playback bit here
 if cli_args['pbflag']:
