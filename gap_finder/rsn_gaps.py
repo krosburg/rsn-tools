@@ -331,9 +331,13 @@ def dump_log_file(logpath, logfile):
     # Create File Handle / Open For Writing
     while fh is None:
         try:
-            fh = open(outfile, 'w+')
+            fh = open(outfile, 'x')
         except:
-            outfile += '.' + str(cnt)
+            if cnt < 1:
+                outfile += '.' + str(cnt)
+            else:
+                outfile = outfile[:-1] + str(cnt)
+            cnt += 1
         if cnt > 5:
             raise('ERROR: Could not create log file!')
     # Write to Log and Close File
