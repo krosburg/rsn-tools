@@ -5,25 +5,26 @@ Please see the individual `README.md` files in the various directories of this r
 
 
 ## Installation
-This installation focuses on getting the `gap_finder` tool up and running. They assume that you already have credentials on the OOINet production and test systems and assume that you have a working Anaconda or Miniconda installation. Here are the steps:
+These instructions focus on getting the `gap_finder` tool up and running. They assume that you already have credentials on the OOINet production and test systems and assume that you have a working Anaconda or Miniconda installation. Here are the steps:
 
-1. Create a new Conda environment with the following packages
+1. Create a new Conda environment with the following packages:
 ```bash
 [user@test]: conda create -n rsntools numpy matplotlib requests pip git pandas
 ```
 2. Activate the new environment (if you have an older conda install, use `source activate` instead):
 ```bash
 [user@test]: conda activate rsntools
+(rsntools)[user@test]: 
 ```
 
 3. Install RSN Tools using pip and git:
 ```bash
-[user@test]: pip install git+https://github.com/krosburg/rsn-tools.git
+(rsntools)[user@test]: pip install git+https://github.com/krosburg/rsn-tools.git
 ```
 
 4. Test the installation (this should print a list of reference designators):
 ```bash
-[user@test]: python
+(rsntools)[user@test]: python
 
 >>> from rsn_tools.core.streams import rdList
 >>> print(list(rdList.keys()))
@@ -56,17 +57,17 @@ DEV03_CREDENTIALS = ('api user key', 'api user token')
 OOI_USERNAME = 'username'
 ```
    
-6. With the Conda environment still activated, navigate to a directory where you normally put your git repos (e.g. `/home/krosburg/code/`)
+7. With the Conda environment still activated, navigate to a directory where you normally put your git repos (e.g. `/home/krosburg/code/`)
 
-7. Clone the rsn-tools git repo:
+8. Clone the rsn-tools git repo:
 ```bash
-[user@test]: git clone https://github.com/krosburg/rsn-tools/
+(rsntools)[user@test]: git clone https://github.com/krosburg/rsn-tools/
 ```
 
-8. Test for correct installation by trying a gap search and NOT doing a playback:
+9. Test for correct installation by trying a gap search and NOT doing a playback:
 ```bash
-[user@test]: cd ./rsn-tools/gap_finder/
-[user@test]: python rsn_gaps.py --refdes=RS03AXPS-PC03A-4A-DOSTAD303 --times=2019-07 --check-only --preview
+(rsntools)[user@test]: cd ./rsn-tools/gap_finder/
+(rsntools)[user@test]: python rsn_gaps.py --refdes=RS03AXPS-PC03A-4A-DOSTAD303 --times=2019-07 --check-only --preview
 ```
 
 This should print out a gap playback request (or nothing if no gaps are found), but should not return any errors.
