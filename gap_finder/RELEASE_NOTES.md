@@ -1,5 +1,8 @@
 # Release Notes
 
+## Version 1.0.2
+* #317: Fixed some bugs related to log updates.
+
 ## Version 1.0.1
 * #285: Fixed errors with writing logs.
 

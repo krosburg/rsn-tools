@@ -325,7 +325,7 @@ def build_gap_list(cabled_refdes, time_windows):
 
 
 def dump_log_file(logpath, logfile):
-    outfile = '/'.join([cli_args['logpath'], logfile])
+    outfile = '/'.join([logpath, logfile])
     cnt = 0
     fh = None
     # Create File Handle / Open For Writing
@@ -340,6 +340,22 @@ def dump_log_file(logpath, logfile):
             cnt += 1
         if cnt > 5:
             raise('ERROR: Could not create log file!')
+    # Write to Log and Close File
+    fh.write(json.dumps({'gap_list': gap_list.dump('JSON'),
+                         'run_info':
+                             {'run_date': run_date.isoformat(),
+                              'command': ' '.join(sys.argv),
+                              'refdes': cli_args['refdes'],
+                              'times': cli_args['times'],
+                              'server': cli_args['server']}
+                             },
+                             indent=2))
+    fh.close()
+    
+    
+def update_log_file(logfile):
+    # Create File Handle / Open For Writing  
+    fh = open(logfile, 'w')
     # Write to Log and Close File
     fh.write(json.dumps({'gap_list': gap_list.dump('JSON'),
                          'run_info':
@@ -399,9 +415,11 @@ if cli_args['pbflag']:
 
 # Dump to Log
 if not cli_args['preview'] and cli_args['logging']:
+    # Logfile updates
     if cli_args['gapfile'] is not None:
         print('Updating logfile: ' + cli_args['gapfile'])
-        dump_log_file('', cli_args['gapfile'])
+        update_log_file(cli_args['gapfile'])
+    # Log file creation
     else:
         print('Writing logfile: ' + '/'.join([cli_args['logpath'], logfile]))
         dump_log_file(cli_args['logpath'], logfile)
