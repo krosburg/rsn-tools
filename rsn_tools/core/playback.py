@@ -419,7 +419,11 @@ def bulk_playback(server, rdList, preview_only=True, force=False, DEBUG=False):
                 preview_playback(server, refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
             else:
                 # Sumit the Request
-                response = run_playback(server, refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
+                try:
+                    response = run_playback(server, refdes, data_range=data_gap, force=force, DEBUG=DEBUG)
+                except ValueError as Err:
+                    print('ERROR: Invalid time range!')
+                    continue
                 if response:
                     # Display response and update job id field of each gap
                     print(refdes, response.json())
