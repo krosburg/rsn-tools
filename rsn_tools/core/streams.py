@@ -159,7 +159,14 @@ rdList = {
       "fullrd": "RS03ASHS/MJ03B/10-CTDPFB304",
       "testPD": "PD908",
       "pdName": "seawater_temperature"
-   },           
+   },
+   "RS03ECAL-MJ03E-12-CTDPFB306": {
+      "method": "streamed",
+      "stream": "ctdpf_optode_sample",
+      "fullrd": "RS03ECAL/MJ03E/12-CTDPFB306",
+      "testPD": "PD908",
+      "pdName": "seawater_temperature"
+   }, 
    "RS01SLBS-LJ01A-12-DOSTAD101": {
       "method": "streamed",
       "stream": "do_stable_sample",

@@ -1,5 +1,9 @@
 # Release Notes
 
+## Version 4.1.0
+* Added `CTDPFB304` to `rsn_tools.core.streams`.
+* #385: Fixed bug in which providing a gap file with start or end time of `""` would cause the program to unexpectedly quit and lose all progress.
+
 ## Version 4.0.0
 * Directory and file restructure and addition of setup.py to be pip installable.
 * Broke `gap_finder` release notes out into the `gap_finder` directory.
