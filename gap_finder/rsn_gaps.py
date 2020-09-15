@@ -223,6 +223,7 @@ def get_args():
 # == VARIABLES FOR MAIN PROGRAM ============================================= #
 # Cutoff and Time Vairables
 cutoff_hours = 24
+#cutoff_hours = 6
 cutoff_frac = cutoff_hours/24.0
 dt_cuttoff = timedelta(hours=cutoff_hours)
 t_fmt = '%Y-%m-%dT%H:%M:%S.%fZ'
@@ -289,7 +290,13 @@ def find_gaps(rd, window_start):
             bad_end = True
     
         # Take Gradient and Find Bad Points
-        tgrad = np.gradient(inst.t)
+        try:
+            tgrad = np.gradient(inst.t)
+        except ValueError as err:
+            print(err)
+            gaps.append(('', ''))
+            return gaps
+
         tbad = inst.t[tgrad >= cutoff_frac]
         tgradbad = tgrad[tgrad >= cutoff_frac]
     
