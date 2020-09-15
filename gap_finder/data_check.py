@@ -47,7 +47,11 @@ gap_list = gaplist_from_file(cli_args)
 for refdes in gap_list.data:
     for gap in gap_list.data[refdes]:
         inst = InstDataObj(refdes)
-        inst.go(gap.start, gap.end, gap_list.server)
+        print('JOB ID: %i' % gap.job)
+        try:
+            inst.go(gap.start, gap.end, gap_list.server)
+        except ValueError as err:
+            print(err)
         print(json.dumps(inst.get_metadata_times(gap_list.server, stream='all'), indent=2))
 
 
